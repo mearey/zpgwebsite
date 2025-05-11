@@ -1,3 +1,5 @@
+::-webkit-scrollbar {display:none;}
+
 .App {
   text-align: center;
 }
@@ -26,6 +28,15 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.gradient{
+  background:linear-gradient(rgba(0, 0, 0, 1),rgba(0, 0, 0, 0));
+  background-color:rgba(0, 0, 0, 0) /*this your primary color*/
+}
+
+.icon{
+  width: 40px;
 }
 
 @keyframes App-logo-spin {

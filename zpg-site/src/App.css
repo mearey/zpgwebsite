@@ -8,6 +8,8 @@
   height: auto;
   width: 100%;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .App-logo {
@@ -52,5 +54,46 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.crt-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-overlay {
+  content: ' ';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0.726) 50%, transparent 50%);
+  background-size: 100% 2px;
+  z-index: 1;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.2;
+  }
+  2% {
+    opacity: 0.8;
+  }
+  8% {
+    opacity: 0.2;
+  }
+  9% {
+    opacity: 0.8;
+  }
+  12% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0.2;
   }
 }

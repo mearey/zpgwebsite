@@ -18,7 +18,10 @@ function App() {
   });
 
   const [isZPSSideHovered, setIsZPSSideHovered] = useState(false);
+  const [isZPSSideClicked, setIsZPSSideClicked] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [video, setVideo] = useState('');
+  const [isMuted, setIsMuted] = useState(true);
   const canvasRef = useRef(null);
   const zpsFrontCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
@@ -137,14 +140,46 @@ function App() {
     img.src = ZPSFront;
   }, [dimensions.scaleFactor, ZPSFront]);
 
+  useEffect(() => {
+    if (isZPSSideClicked) {
+      const timer = setTimeout(() => {
+        setIsZPSSideClicked(false);
+      }, 800); // Match the transition duration
+      setIsZPSSideHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isZPSSideClicked]);
+
+  // Set max height of App container to match background image height
+  useEffect(() => {
+    const appContainer = document.querySelector('.App');
+    if (appContainer) {
+      appContainer.style.maxHeight = `${dimensions.scaledBackgroundHeight}px`;
+    }
+  }, [dimensions.scaledBackgroundHeight]);
+
   // Calculate scaling factor based on viewport width vs background image width
   const viewportWidth = dimensions.viewportWidth;
   const backgroundImageWidth = 640; // Assuming this is the original width of backgroundImage
   const backgroundImageHeight = 1080; // Assuming this is the original height of backgroundImage
-  const diskTopWidth = 140; // Assuming this is the original width of DiskTop
+  const diskTopWidth = 132; // Assuming this is the original width of DiskTop
   const diskWidth = 4;
   const scaleFactor = dimensions.scaleFactor;
   const scaledBackgroundHeight = dimensions.scaledBackgroundHeight;
+  
+  const polygonPoints = '20 0, 80 0, 92 3, 98 8, 100 20, 100 80, 98 92, 92 97, 80 100, 20 100, 8 97, 2 92, 0 80, 0 20, 2 8, 8 3';
+  const svgMask = `
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="fade-blur">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+        </filter>
+      </defs>
+      <polygon points="${polygonPoints}" fill="white" filter="url(#fade-blur)" />
+    </svg>
+  `.trim();
+
+  const maskUrl = `url("data:image/svg+xml,${encodeURIComponent(svgMask)}")`;
   
   return (
     <div className="App">
@@ -176,6 +211,37 @@ function App() {
         alt="Background"
       />
 
+      {/* Custom Shaped YouTube Player */}
+      <div className="crt-effect" style={{
+        position: 'absolute',
+        top: '10.28%',
+        left: '14.435%',
+        width: `${147 * scaleFactor}px`,
+        height: `${124 * scaleFactor}px`,
+        zIndex: -0.1,
+        maskImage: maskUrl,
+        WebkitMaskImage: maskUrl,
+        backgroundColor: 'black'
+      }}>
+        {video && (
+          <iframe
+            src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${video}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+            title="Background Video"
+            style={{
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '150%',
+              height: '100%',
+              border: 'none'
+            }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        )}
+        <div className="crt-overlay"></div>
+      </div>
+
       <canvas 
         ref={canvasRef}
         style={{
@@ -190,32 +256,35 @@ function App() {
         }}
         onMouseEnter={() => setIsZPSSideHovered(true)}
         onMouseLeave={() => setIsZPSSideHovered(false)}
+        onClick={() => {
+          setIsZPSSideClicked(true);
+          setVideo('eLy7rmBwkqE');
+          setIsMuted(false);
+        }}
       />
 
       <canvas 
         ref={zpsFrontCanvasRef}
         style={{
           position: 'absolute',
-          top: "10%",
-          left: "61%",
+          top: isZPSSideClicked ? "30%" : "10%",
+          left: isZPSSideClicked ? "25%" : "61%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,
           zIndex: 2,
-          opacity: isZPSSideHovered ? 1 : 0,
-          transition: 'opacity 0.2s ease-in-out',
+          opacity: isZPSSideHovered && !isZPSSideClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsZPSSideHovered(true)}
-        onMouseLeave={() => setIsZPSSideHovered(false)}
       />
 
       <img 
         src={DiskTop} 
         style={{
           position: 'absolute',
-          top: "27.78%",
-          left: "60%",
+          top: "26.485%",
+          left: "60.8%",
           width: `${diskTopWidth * scaleFactor}px`,
           height: 'auto',
           margin: 0,
@@ -225,16 +294,34 @@ function App() {
         alt="DiskTop"
       />
       <header className="App-header" style={{ height: `${scaledBackgroundHeight}px` }}>
-        <div class="gradient" style={{height:"100px", position: "absolute", top:"0px", width:"100%", alignItems:"center", display:"flex"}}>
-          <img src={siteheader} style={{width:"45%", margin:"auto", display:"flex", justifyContent:"center"}}></img>
+        <div
+          className="gradient"
+          style={{
+            height: '100px',
+            position: 'fixed',
+            top: '0px',
+            width: '100%',
+            alignItems: 'center',
+            display: 'flex',
+            zIndex: 1000
+          }}
+        >
+          <img
+            src={siteheader}
+            style={{ width: '45%', margin: 'auto', display: 'flex', justifyContent: 'center' }}
+          ></img>
           <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"25px"}}>
             <input type="image" class="icon" src={discordIcon} ></input>
           </a>
           <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"75px"}}>
             <input class="icon" type="image" src={steamIcon}></input>
           </a>
-          <a href="https://bsky.app/profile/zero-point-games.bsky.social" target='_blank' style={{ position:"absolute",left:"125px"}}>
-            <input class="icon" type="image" src={blueskyIcon}></input>
+          <a
+            href="https://bsky.app/profile/zero-point-games.bsky.social"
+            target="_blank"
+            style={{ position: 'absolute', left: '125px' }}
+          >
+            <input className="icon" type="image" src={blueskyIcon}></input>
           </a>
           <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin}></img>
         </div>
@@ -244,3 +331,4 @@ function App() {
 }
 
 export default App;
+

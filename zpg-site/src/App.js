@@ -2,25 +2,241 @@ import siteheader from './websiteheader.png';
 import discordIcon from "./icons/aav06vw3u.png"
 import steamIcon from "./icons/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.png"
 import blueskyIcon from "./icons/bluesky-icon.png"
+import iconOfSin from "./iconOFSIN.png"
+import backgroundImage from "./images/website_background.png"
+import DiskTop from "./images/DiskHolderTop.png"
+import ZPSSide from "./images/disks/ZPSSide.png"
+import ZPSFront from "./images/disks/ZPSFront.png"
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-
-
 function App() {
+  const [dimensions, setDimensions] = useState({
+    viewportWidth: window.innerWidth,
+    scaleFactor: window.innerWidth / 640,
+    scaledBackgroundHeight: (window.innerWidth / 640) * 1080
+  });
+
+  const [isZPSSideHovered, setIsZPSSideHovered] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const canvasRef = useRef(null);
+  const zpsFrontCanvasRef = useRef(null);
+  const starfieldRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const viewportWidth = window.innerWidth;
+      const scaleFactor = viewportWidth / 640;
+      const scaledBackgroundHeight = scaleFactor * 1080;
+      
+      setDimensions({
+        viewportWidth,
+        scaleFactor,
+        scaledBackgroundHeight
+      });
+    };
+
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Generate starfield
+  useEffect(() => {
+    const canvas = starfieldRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const backgroundImageWidth = 640;
+    const backgroundImageHeight = 1080;
+    const scaleFactor = dimensions.scaleFactor;
+    
+    canvas.width = backgroundImageWidth * scaleFactor;
+    canvas.height = backgroundImageHeight * scaleFactor;
+    
+    // Clear canvas
+    ctx.fillStyle = 'transparent';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Generate stars
+    const numStars = 200;
+    const starColors = ['#FFFFFF', '#87CEEB', '#FF6B6B']; // White, Blue, Red
+    
+    for (let i = 0; i < numStars; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const color = starColors[Math.floor(Math.random() * starColors.length)];
+      
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, 1, 1);
+    }
+  }, [dimensions.scaleFactor]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = Math.max(1, Math.floor(scaleFactor)) * diskWidth * 2;
+      const scaledHeight = Math.max(1, Math.floor(scaleFactor)) * img.height * 2;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = ZPSSide;
+  }, [dimensions.scaleFactor, ZPSSide]);
+
+  useEffect(() => {
+    const canvas = zpsFrontCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 64;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = Math.max(1, Math.floor(scaleFactor)) * diskWidth * 2;
+      const scaledHeight = Math.max(1, Math.floor(scaleFactor)) * img.height * 2;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = ZPSFront;
+  }, [dimensions.scaleFactor, ZPSFront]);
+
+  // Calculate scaling factor based on viewport width vs background image width
+  const viewportWidth = dimensions.viewportWidth;
+  const backgroundImageWidth = 640; // Assuming this is the original width of backgroundImage
+  const backgroundImageHeight = 1080; // Assuming this is the original height of backgroundImage
+  const diskTopWidth = 140; // Assuming this is the original width of DiskTop
+  const diskWidth = 4;
+  const scaleFactor = dimensions.scaleFactor;
+  const scaledBackgroundHeight = dimensions.scaledBackgroundHeight;
+  
   return (
     <div className="App">
-      <header className="App-header">
+      <canvas 
+        ref={starfieldRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          margin: 0,
+          padding: 0,
+          zIndex: -0.5,
+          transform: `translateY(${scrollY * 0.3}px)`
+        }}
+      />
+      
+      <img 
+        src={backgroundImage} 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: `${backgroundImageWidth * scaleFactor}px`,
+          height: 'auto',
+          margin: 0,
+          padding: 0,
+          zIndex: 0
+        }}
+        alt="Background"
+      />
+
+      <canvas 
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          top: isZPSSideHovered ? "20.28%" : "22.28%",
+          left: "60%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsZPSSideHovered(true)}
+        onMouseLeave={() => setIsZPSSideHovered(false)}
+      />
+
+      <canvas 
+        ref={zpsFrontCanvasRef}
+        style={{
+          position: 'absolute',
+          top: "10%",
+          left: "60%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isZPSSideHovered ? 1 : 0,
+          transition: 'opacity 0.2s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsZPSSideHovered(true)}
+        onMouseLeave={() => setIsZPSSideHovered(false)}
+      />
+
+      <img 
+        src={DiskTop} 
+        style={{
+          position: 'absolute',
+          top: "27.78%",
+          left: "60%",
+          width: `${diskTopWidth * scaleFactor}px`,
+          height: 'auto',
+          margin: 0,
+          padding: 0,
+          zIndex: 999,
+        }}
+        alt="DiskTop"
+      />
+      <header className="App-header" style={{ height: `${scaledBackgroundHeight}px` }}>
         <div class="gradient" style={{height:"100px", position: "absolute", top:"0px", width:"100%", alignItems:"center", display:"flex"}}>
           <img src={siteheader} style={{width:"45%", margin:"auto", display:"flex", justifyContent:"center"}}></img>
-          <a href="https://discord.gg/MJsPQmW2" target='_blank'>
-            <input type="image" class="icon" src={discordIcon} style={{ position:"absolute",left:"25px"}}></input>
+          <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"25px"}}>
+            <input type="image" class="icon" src={discordIcon} ></input>
           </a>
-          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'>
-            <input class="icon" type="image" src={steamIcon} style={{ position:"absolute",left:"75px"}}></input>
+          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"75px"}}>
+            <input class="icon" type="image" src={steamIcon}></input>
           </a>
-          <a href="https://bsky.app/profile/zero-point-games.bsky.social" target='_blank'>
-            <input class="icon" type="image" src={blueskyIcon} style={{ position:"absolute",left:"125px"}}></input>
+          <a href="https://bsky.app/profile/zero-point-games.bsky.social" target='_blank' style={{ position:"absolute",left:"125px"}}>
+            <input class="icon" type="image" src={blueskyIcon}></input>
           </a>
+          <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin}></img>
         </div>
       </header>
     </div>

@@ -89,8 +89,8 @@ function App() {
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
-      const scaledWidth = Math.max(1, Math.floor(scaleFactor)) * diskWidth * 2;
-      const scaledHeight = Math.max(1, Math.floor(scaleFactor)) * img.height * 2;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
       
       canvas.width = scaledWidth;
       canvas.height = scaledHeight;
@@ -118,8 +118,8 @@ function App() {
     img.onload = () => {
       const diskWidth = 64;
       const scaleFactor = dimensions.scaleFactor;
-      const scaledWidth = Math.max(1, Math.floor(scaleFactor)) * diskWidth * 2;
-      const scaledHeight = Math.max(1, Math.floor(scaleFactor)) * img.height * 2;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
       
       canvas.width = scaledWidth;
       canvas.height = scaledHeight;
@@ -157,7 +157,7 @@ function App() {
           margin: 0,
           padding: 0,
           zIndex: -0.5,
-          transform: `translateY(${scrollY * 0.3}px)`
+          transform: `translateY(${scrollY * -0.3}px)`
         }}
       />
       
@@ -181,7 +181,7 @@ function App() {
         style={{
           position: 'absolute',
           top: isZPSSideHovered ? "20.28%" : "22.28%",
-          left: "60%",
+          left: "61%",
           margin: 0,
           padding: 0,
           zIndex: 1,
@@ -197,7 +197,7 @@ function App() {
         style={{
           position: 'absolute',
           top: "10%",
-          left: "60%",
+          left: "61%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,

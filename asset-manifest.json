@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e4e11894.css",
+    "main.js": "/static/js/main.d565aba9.js",
+    "static/js/453.59eee627.chunk.js": "/static/js/453.59eee627.chunk.js",
+    "static/media/steam-round-logo-icon-download-png-l6elakl5o.png": "/static/media/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.e9e6c90ead126ba41b6c.png",
+    "static/media/bluesky-icon.png": "/static/media/bluesky-icon.506a1dfa16d3827dcb68.png",
+    "static/media/aav06vw3u.png": "/static/media/aav06vw3u.32b4de678a9eb45190f8.png",
+    "index.html": "/index.html",
+    "main.e4e11894.css.map": "/static/css/main.e4e11894.css.map",
+    "main.d565aba9.js.map": "/static/js/main.d565aba9.js.map",
+    "453.59eee627.chunk.js.map": "/static/js/453.59eee627.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e4e11894.css",
+    "static/js/main.d565aba9.js"
+  ]
+}

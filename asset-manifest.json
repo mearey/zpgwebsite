@@ -1,18 +1,19 @@
 {
   "files": {
     "main.css": "/zpgwebsite/static/css/main.f0538781.css",
-    "main.js": "/zpgwebsite/static/js/main.b6bfdec9.js",
+    "main.js": "/zpgwebsite/static/js/main.dd6886d2.js",
     "static/js/453.59eee627.chunk.js": "/zpgwebsite/static/js/453.59eee627.chunk.js",
     "static/media/steam-round-logo-icon-download-png-l6elakl5o.png": "/zpgwebsite/static/media/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.e9e6c90ead126ba41b6c.png",
+    "static/media/website_background.png": "/zpgwebsite/static/media/website_background.a9e87c4953debf72f660.png",
     "static/media/bluesky-icon.png": "/zpgwebsite/static/media/bluesky-icon.506a1dfa16d3827dcb68.png",
     "static/media/aav06vw3u.png": "/zpgwebsite/static/media/aav06vw3u.32b4de678a9eb45190f8.png",
     "index.html": "/zpgwebsite/index.html",
     "main.f0538781.css.map": "/zpgwebsite/static/css/main.f0538781.css.map",
-    "main.b6bfdec9.js.map": "/zpgwebsite/static/js/main.b6bfdec9.js.map",
+    "main.dd6886d2.js.map": "/zpgwebsite/static/js/main.dd6886d2.js.map",
     "453.59eee627.chunk.js.map": "/zpgwebsite/static/js/453.59eee627.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f0538781.css",
-    "static/js/main.b6bfdec9.js"
+    "static/js/main.dd6886d2.js"
   ]
 }

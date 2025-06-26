@@ -4,6 +4,7 @@ import steamIcon from "./icons/steam-round-logo-icon-download-png-70175169496603
 import blueskyIcon from "./icons/bluesky-icon.png"
 import iconOfSin from "./iconOFSIN.png"
 import backgroundImage from "./images/website_background.png"
+import backgroundImageRight from "./images/website_background_right_scaled.png"
 import DiskTop from "./images/DiskHolderTop.png"
 import ZPSSide from "./images/disks/ZPSSide.png"
 import ZPSFront from "./images/disks/ZPSFront.png"
@@ -25,6 +26,12 @@ function App() {
   const canvasRef = useRef(null);
   const zpsFrontCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
+  const scrollLerpRef = useRef(null);
+  const [scrollX, setScrollX] = useState(window.scrollX);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [appWidth, setAppWidth] = useState(window.innerWidth);
+
+  const appRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -181,8 +188,60 @@ function App() {
 
   const maskUrl = `url("data:image/svg+xml,${encodeURIComponent(svgMask)}")`;
   
+  // Update scrollX, windowWidth, and appWidth on scroll/resize
+  useEffect(() => {
+    const onScroll = () => setScrollX(window.scrollX);
+    const onResize = () => {
+      setWindowWidth(window.innerWidth);
+      setAppWidth(appRef.current ? appRef.current.scrollWidth : window.innerWidth);
+      setScrollX(window.scrollX);
+    };
+    window.addEventListener('scroll', onScroll);
+    window.addEventListener('resize', onResize);
+    // Initial set
+    setAppWidth(appRef.current ? appRef.current.scrollWidth : window.innerWidth);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
+
+  const maxScroll = appWidth - windowWidth;
+  const atFarLeft = scrollX <= 0;
+  const atFarRight = scrollX >= maxScroll - 1; // allow for rounding
+  const showLeftArrow = !atFarLeft;
+  const showRightArrow = !atFarRight;
+
+  const handleArrowClick = (toLeft) => {
+    const startX = window.scrollX;
+    let targetX;
+    if (toLeft) {
+      targetX = 0;
+    } else {
+      targetX = maxScroll;
+    }
+    const duration = 600; // ms
+    const startTime = performance.now();
+
+    function lerpScroll(currentTime) {
+      const elapsed = currentTime - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      // Ease in-out
+      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      const newX = startX + (targetX - startX) * ease;
+      window.scrollTo({ left: newX, top: window.scrollY });
+      if (t < 1) {
+        scrollLerpRef.current = requestAnimationFrame(lerpScroll);
+      }
+    }
+    if (scrollLerpRef.current) {
+      cancelAnimationFrame(scrollLerpRef.current);
+    }
+    scrollLerpRef.current = requestAnimationFrame(lerpScroll);
+  };
+
   return (
-    <div className="App">
+    <div className="App" ref={appRef}>
       <canvas 
         ref={starfieldRef}
         style={{
@@ -196,6 +255,22 @@ function App() {
         }}
       />
       
+      {/* Right background image, starts at 50% of viewport width */}
+      <img 
+        src={backgroundImageRight}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: '45.6vw',
+          width: `${backgroundImageWidth * scaleFactor}px`,
+          height: 'auto',
+          margin: 0,
+          padding: 0,
+          zIndex: -0.2
+        }}
+        alt="Background Right"
+      />
+
       <img 
         src={backgroundImage} 
         style={{
@@ -215,7 +290,7 @@ function App() {
       <div className="crt-effect" style={{
         position: 'absolute',
         top: '10.28%',
-        left: '14.435%',
+        left: '9.635%',
         width: `${147 * scaleFactor}px`,
         height: `${124 * scaleFactor}px`,
         zIndex: -0.1,
@@ -247,7 +322,7 @@ function App() {
         style={{
           position: 'absolute',
           top: isZPSSideHovered ? "20.28%" : "22.28%",
-          left: "61%",
+          left: "41%",
           margin: 0,
           padding: 0,
           zIndex: 1,
@@ -268,7 +343,7 @@ function App() {
         style={{
           position: 'absolute',
           top: isZPSSideClicked ? "30%" : "10%",
-          left: isZPSSideClicked ? "25%" : "61%",
+          left: isZPSSideClicked ? "25%" : "41%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,
@@ -284,7 +359,7 @@ function App() {
         style={{
           position: 'absolute',
           top: "26.485%",
-          left: "60.8%",
+          left: "40.55%",
           width: `${diskTopWidth * scaleFactor}px`,
           height: 'auto',
           margin: 0,
@@ -300,7 +375,8 @@ function App() {
             height: '100px',
             position: 'fixed',
             top: '0px',
-            width: '100%',
+            left: 0,
+            width: '100vw',
             alignItems: 'center',
             display: 'flex',
             zIndex: 1000
@@ -308,8 +384,20 @@ function App() {
         >
           <img
             src={siteheader}
-            style={{ width: '45%', margin: 'auto', display: 'flex', justifyContent: 'center' }}
-          ></img>
+            style={{
+              position: 'fixed',
+              top: '0px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '45vw',
+              minWidth: 320,
+              maxWidth: '900px',
+              margin: 0,
+              display: 'block',
+              zIndex: 1001
+            }}
+            alt="Header"
+          />
           <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"25px"}}>
             <input type="image" class="icon" src={discordIcon} ></input>
           </a>
@@ -326,6 +414,65 @@ function App() {
           <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin}></img>
         </div>
       </header>
+
+      {/* Dummy wide div for horizontal scroll demo */}
+      <div style={{ width: '200vw', height: 100, background: 'linear-gradient(90deg, #444, #888)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, marginTop: 32 }}>
+        Scroll me!
+      </div>
+
+      {/* Floating right arrow button */}
+      {showLeftArrow && (
+        <button
+          className="floating-arrow"
+          onClick={() => handleArrowClick(true)}
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '24px',
+            zIndex: 2000,
+            background: 'rgba(30,30,30,0.7)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '48px',
+            height: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+          aria-label="Scroll left"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+        </button>
+      )}
+      {showRightArrow && (
+        <button
+          className="floating-arrow"
+          onClick={() => handleArrowClick(false)}
+          style={{
+            position: 'fixed',
+            top: '50%',
+            right: '24px',
+            zIndex: 2000,
+            background: 'rgba(30,30,30,0.7)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '48px',
+            height: '48px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+          aria-label="Scroll right"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+        </button>
+      )}
     </div>
   );
 }

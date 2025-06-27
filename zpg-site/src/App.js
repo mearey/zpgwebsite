@@ -39,7 +39,7 @@ function App() {
   const arpgFrontCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
   const scrollLerpRef = useRef(null);
-  const [scrollX, setScrollX] = useState(window.scrollX);
+  const [scrollX, setScrollX] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [appWidth, setAppWidth] = useState(window.innerWidth);
 
@@ -246,46 +246,41 @@ function App() {
   
   // Update scrollX, windowWidth, and appWidth on scroll/resize
   useEffect(() => {
-    const onScroll = () => setScrollX(window.scrollX);
-    const onResize = () => {
-      setWindowWidth(window.innerWidth);
-      setAppWidth(appRef.current ? appRef.current.scrollWidth : window.innerWidth);
-      setScrollX(window.scrollX);
-    };
-    window.addEventListener('scroll', onScroll);
-    window.addEventListener('resize', onResize);
+    const app = appRef.current;
+    if (!app) return;
+    const onScroll = () => setScrollX(app.scrollLeft);
+    app.addEventListener('scroll', onScroll);
     // Initial set
-    setAppWidth(appRef.current ? appRef.current.scrollWidth : window.innerWidth);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-    };
+    setScrollX(app.scrollLeft);
+    return () => app.removeEventListener('scroll', onScroll);
   }, []);
 
-  const maxScroll = appWidth - windowWidth;
+  const maxScroll = appRef.current ? appRef.current.scrollWidth - appRef.current.clientWidth : 0;
   const atFarLeft = scrollX <= 0;
-  const atFarRight = scrollX >= maxScroll - 1; // allow for rounding
+  const atFarRight = scrollX >= maxScroll - 1;
   const showLeftArrow = !atFarLeft;
   const showRightArrow = !atFarRight;
 
   const handleArrowClick = (toLeft) => {
-    const startX = window.scrollX;
+    const scrollAmount = window.innerWidth * 0.8;
+    const app = appRef.current;
+    const startX = app.scrollLeft;
     let targetX;
+    const maxScroll = app.scrollWidth - app.clientWidth;
     if (toLeft) {
-      targetX = 0;
+      targetX = Math.max(0, startX - scrollAmount);
     } else {
-      targetX = maxScroll;
+      targetX = Math.min(maxScroll, startX + scrollAmount);
     }
-    const duration = 600; // ms
+    const duration = 600;
     const startTime = performance.now();
 
     function lerpScroll(currentTime) {
       const elapsed = currentTime - startTime;
       const t = Math.min(elapsed / duration, 1);
-      // Ease in-out
       const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
       const newX = startX + (targetX - startX) * ease;
-      window.scrollTo({ left: newX, top: window.scrollY });
+      app.scrollTo({ left: newX });
       if (t < 1) {
         scrollLerpRef.current = requestAnimationFrame(lerpScroll);
       }
@@ -415,9 +410,14 @@ function App() {
     
     img.src = arpgFront;
   }, [dimensions.scaleFactor, arpgFront]);
-
+  console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow });
   return (
     <div className="App" ref={appRef}>
+      <div className="rotate-device-overlay">
+        Please rotate your device for the best experience!
+        <br />
+        <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
+      </div>
       <canvas 
         ref={starfieldRef}
         style={{
@@ -673,6 +673,21 @@ function App() {
         </div>
       </header>
 
+      {/* Wide scrollable div for testing horizontal scroll */}
+      <div style={{
+        width: '200vw',
+        height: 100,
+        background: 'linear-gradient(90deg, #444, #888)',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 32,
+        marginTop: 32
+      }}>
+        Scroll me!
+      </div>
+
       {/* Floating right arrow button */}
       {showLeftArrow && (
         <button
@@ -700,7 +715,7 @@ function App() {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
         </button>
       )}
-      {showRightArrow && (
+      {true && (
         <button
           className="floating-arrow"
           onClick={() => handleArrowClick(false)}

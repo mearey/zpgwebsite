@@ -45,12 +45,15 @@ function App() {
 
   const appRef = useRef(null);
 
+  // Store star data for twinkling
+  const starsRef = useRef([]);
+  const animationFrameRef = useRef();
+
   useEffect(() => {
     const handleResize = () => {
       const viewportWidth = window.innerWidth;
-      const scaleFactor = viewportWidth / 640;
+      let scaleFactor = viewportWidth / 640;
       const scaledBackgroundHeight = scaleFactor * 1080;
-      
       setDimensions({
         viewportWidth,
         scaleFactor,
@@ -64,6 +67,8 @@ function App() {
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll);
+    // Initial call
+    handleResize();
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
@@ -74,31 +79,50 @@ function App() {
   useEffect(() => {
     const canvas = starfieldRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     const backgroundImageWidth = 640;
     const backgroundImageHeight = 1080;
     const scaleFactor = dimensions.scaleFactor;
-    
     canvas.width = backgroundImageWidth * scaleFactor;
     canvas.height = backgroundImageHeight * scaleFactor;
-    
-    // Clear canvas
-    ctx.fillStyle = 'transparent';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Generate stars
-    const numStars = 200;
-    const starColors = ['#FFFFFF', '#87CEEB', '#FF6B6B']; // White, Blue, Red
-    
-    for (let i = 0; i < numStars; i++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
-      const color = starColors[Math.floor(Math.random() * starColors.length)];
-      
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, 1, 1);
+
+    // Weighted: white is more common
+    const starColors = [
+      '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', '#FFFFFF', // 5x white
+      '#87CEEB', // 1x blue
+      '#FF6B6B'  // 1x red
+    ];
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        color: starColors[Math.floor(Math.random() * starColors.length)],
+        phase: Math.random() * Math.PI * 2, // random phase for twinkle
+        speed: 0.5 + Math.random() * 0.8, // twinkle speed
+        size: 2 + Math.random() * 4 // random size between 2 and 6
+      });
     }
+    starsRef.current = stars;
+
+    // Animation loop for twinkling
+    function drawStars(time) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < starsRef.current.length; i++) {
+        const star = starsRef.current[i];
+        // Twinkle: alpha oscillates between 0.3 and 1
+        const alpha = 0.3 + 0.7 * Math.abs(Math.sin(time * 0.001 * star.speed + star.phase));
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = star.color;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      }
+      ctx.globalAlpha = 1;
+      animationFrameRef.current = requestAnimationFrame(drawStars);
+    }
+    animationFrameRef.current = requestAnimationFrame(drawStars);
+    return () => {
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    };
   }, [dimensions.scaleFactor]);
 
   useEffect(() => {
@@ -442,7 +466,7 @@ function App() {
       <div className="crt-effect" style={{
         position: 'absolute',
         top: '10.28%',
-        left: '9.635%',
+        left: '14.635%',
         width: `${147 * scaleFactor}px`,
         height: `${124 * scaleFactor}px`,
         zIndex: -0.1,
@@ -472,10 +496,11 @@ function App() {
       {/* ZPS Side Disk */}
       <canvas 
         ref={canvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isZPSSideHovered ? "20.28%" : "22.28%",
-          left: "41%",
+          left: "62%",
           margin: 0,
           padding: 0,
           zIndex: 1,
@@ -496,10 +521,11 @@ function App() {
       {/* ZPS Front Disk */}
       <canvas 
         ref={zpsFrontCanvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isZPSSideClicked ? "30%" : "10%",
-          left: isZPSSideClicked ? "25%" : "41%",
+          left: isZPSSideClicked ? "25%" : "62%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,
@@ -513,10 +539,11 @@ function App() {
       {/* Tower Defense Side Disk */}
       <canvas 
         ref={tdSideCanvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isTdSideHovered ? "20.28%" : "22.28%",
-          left: "41.5%",
+          left: "62.75%",
           margin: 0,
           padding: 0,
           zIndex: 1,
@@ -529,7 +556,7 @@ function App() {
           setIsTdSideClicked(true);
           setIsZPSSideClicked(false);
           setIsArpgSideClicked(false);
-          setVideo('eLy7rmBwkqE'); // or your TD video
+          setVideo('eLy7rmBwkqE');
           setIsMuted(false);
         }}
       />
@@ -537,10 +564,11 @@ function App() {
       {/* Tower Defense Front Disk */}
       <canvas 
         ref={tdFrontCanvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isTdSideClicked ? "30%" : "10%",
-          left: isTdSideClicked ? "25%" : "41.5%",
+          left: isTdSideClicked ? "25%" : "62.75%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,
@@ -554,14 +582,15 @@ function App() {
       {/* ARPG Side Disk */}
       <canvas 
         ref={arpgSideCanvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isArpgSideHovered ? "20.28%" : "22.28%",
-          left: "42%",
+          left: "63.5%",
           margin: 0,
           padding: 0,
           zIndex: 1,
-          transition: 'top 0.3s, left 0.8s ease-in-out',
+          transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
         onMouseEnter={() => setIsArpgSideHovered(true)}
@@ -570,7 +599,7 @@ function App() {
           setIsArpgSideClicked(true);
           setIsZPSSideClicked(false);
           setIsTdSideClicked(false);
-          setVideo('jR6_nmcV2jo'); // or your ARPG video
+          setVideo('jR6_nmcV2jo');
           setIsMuted(false);
         }}
       />
@@ -578,10 +607,11 @@ function App() {
       {/* ARPG Front Disk */}
       <canvas 
         ref={arpgFrontCanvasRef}
+        className="disk-canvas"
         style={{
           position: 'absolute',
           top: isArpgSideClicked ? "30%" : "10%",
-          left: isArpgSideClicked ? "25%" : "42%",
+          left: isArpgSideClicked ? "25%" : "63.5%",
           transform: 'translateX(-50%)',
           margin: 0,
           padding: 0,
@@ -594,10 +624,11 @@ function App() {
 
       <img 
         src={DiskTop} 
+        className="disk-holder"
         style={{
           position: 'absolute',
           top: "26.485%",
-          left: "40.55%",
+          left: "60.76%",
           width: `${diskTopWidth * scaleFactor}px`,
           height: 'auto',
           margin: 0,
@@ -622,18 +653,7 @@ function App() {
         >
           <img
             src={siteheader}
-            style={{
-              position: 'fixed',
-              top: '0px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '45vw',
-              minWidth: 320,
-              maxWidth: '900px',
-              margin: 0,
-              display: 'block',
-              zIndex: 1001
-            }}
+            className="header-image"
             alt="Header"
           />
           <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"25px"}}>
@@ -649,14 +669,9 @@ function App() {
           >
             <input className="icon" type="image" src={blueskyIcon}></input>
           </a>
-          <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin}></img>
+          <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin} className="top-logo" />
         </div>
       </header>
-
-      {/* Dummy wide div for horizontal scroll demo */}
-      <div style={{ width: '200vw', height: 100, background: 'linear-gradient(90deg, #444, #888)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, marginTop: 32 }}>
-        Scroll me!
-      </div>
 
       {/* Floating right arrow button */}
       {showLeftArrow && (
@@ -711,56 +726,6 @@ function App() {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
         </button>
       )}
-
-      {/* Alternative: Game Preview with Screenshot */}
-      <div style={{
-        position: 'absolute',
-        top: '80%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: `${350 * scaleFactor}px`,
-        height: `${250 * scaleFactor}px`,
-        zIndex: 10,
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        borderRadius: '10px',
-        overflow: 'hidden',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-      }}>
-        {/* Placeholder for game screenshot - replace with actual image */}
-        <div style={{
-          width: '100%',
-          height: '70%',
-          backgroundColor: '#2a2a2a',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#666',
-          fontSize: '14px'
-        }}>
-          [Game Screenshot Here]
-        </div>
-        <div style={{
-          padding: '15px',
-          textAlign: 'center'
-        }}>
-          <h4 style={{ color: 'white', margin: '0 0 10px 0' }}>01 Tower Defense</h4>
-          <button
-            onClick={() => window.open('https://gx.games/games/p42gse/01-tower-defense/', '_blank')}
-            style={{
-              backgroundColor: '#ff6b35',
-              color: 'white',
-              border: 'none',
-              padding: '8px 20px',
-              borderRadius: '15px',
-              fontSize: '14px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Play on GX.games
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

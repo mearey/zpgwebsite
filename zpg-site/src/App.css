@@ -7,7 +7,6 @@
   padding: 0;
   height: auto;
   width: 100%;
-  min-width: 150vw;
   position: relative;
   overflow-y: auto;
 }
@@ -24,7 +23,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #171924;
   height: 1000px;
   min-height: 100vh;
   display: flex;
@@ -41,7 +40,9 @@
 
 .gradient{
   background:linear-gradient(rgba(0, 0, 0, 1),rgba(0, 0, 0, 0));
-  background-color:rgba(0, 0, 0, 0) /*this your primary color*/
+  background-color:rgba(0, 0, 0, 0);
+  position: relative;
+  width: 100vw;
 }
 
 .icon{
@@ -101,4 +102,51 @@
 .floating-arrow:hover {
   background: rgba(60, 60, 60, 0.85);
   box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+.top-logo {
+  height: 110px;
+  right: 25px;
+  position: absolute;
+}
+
+@media (max-width: 100px) {
+  .icon {
+    width: 20px;
+  }
+  .top-logo {
+    height: 55px;
+    right: 12px;
+  }
+}
+
+.header-image {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 45vw;
+  max-width: 900px;
+  min-width: 200px;
+  margin: 0;
+  display: block;
+  z-index: 1001;
+}
+@media (max-width: 100px) {
+  .header-image {
+    width: 80vw;
+    max-width: 400px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 100px) {
+  .App, .App-header {
+    min-width: 100vw !important;
+    width: 100vw !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+    overflow-x: hidden !important;
+  }
 }

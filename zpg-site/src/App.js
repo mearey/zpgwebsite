@@ -8,6 +8,10 @@ import backgroundImageRight from "./images/website_background_right_scaled.png"
 import DiskTop from "./images/DiskHolderTop.png"
 import ZPSSide from "./images/disks/ZPSSide.png"
 import ZPSFront from "./images/disks/ZPSFront.png"
+import tdSide from "./images/disks/tdSide.png"
+import tdFront from "./images/disks/tdFront.png"
+import arpgSide from "./images/disks/arpgSide.png"
+import arpgFront from "./images/disks/arpgFront.png"
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
@@ -20,11 +24,19 @@ function App() {
 
   const [isZPSSideHovered, setIsZPSSideHovered] = useState(false);
   const [isZPSSideClicked, setIsZPSSideClicked] = useState(false);
+  const [isTdSideHovered, setIsTdSideHovered] = useState(false);
+  const [isTdSideClicked, setIsTdSideClicked] = useState(false);
+  const [isArpgSideHovered, setIsArpgSideHovered] = useState(false);
+  const [isArpgSideClicked, setIsArpgSideClicked] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [video, setVideo] = useState('');
   const [isMuted, setIsMuted] = useState(true);
   const canvasRef = useRef(null);
   const zpsFrontCanvasRef = useRef(null);
+  const tdSideCanvasRef = useRef(null);
+  const tdFrontCanvasRef = useRef(null);
+  const arpgSideCanvasRef = useRef(null);
+  const arpgFrontCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
   const scrollLerpRef = useRef(null);
   const [scrollX, setScrollX] = useState(window.scrollX);
@@ -157,6 +169,26 @@ function App() {
     }
   }, [isZPSSideClicked]);
 
+  useEffect(() => {
+    if (isTdSideClicked) {
+      const timer = setTimeout(() => {
+        setIsTdSideClicked(false);
+      }, 800);
+      setIsTdSideHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isTdSideClicked]);
+
+  useEffect(() => {
+    if (isArpgSideClicked) {
+      const timer = setTimeout(() => {
+        setIsArpgSideClicked(false);
+      }, 800);
+      setIsArpgSideHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isArpgSideClicked]);
+
   // Set max height of App container to match background image height
   useEffect(() => {
     const appContainer = document.querySelector('.App');
@@ -240,6 +272,126 @@ function App() {
     scrollLerpRef.current = requestAnimationFrame(lerpScroll);
   };
 
+  // Tower Defense Side Disk
+  useEffect(() => {
+    const canvas = tdSideCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = tdSide;
+  }, [dimensions.scaleFactor, tdSide]);
+
+  // Tower Defense Front Disk
+  useEffect(() => {
+    const canvas = tdFrontCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 64;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = tdFront;
+  }, [dimensions.scaleFactor, tdFront]);
+
+  // ARPG Side Disk
+  useEffect(() => {
+    const canvas = arpgSideCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = arpgSide;
+  }, [dimensions.scaleFactor, arpgSide]);
+
+  // ARPG Front Disk
+  useEffect(() => {
+    const canvas = arpgFrontCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 64;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = arpgFront;
+  }, [dimensions.scaleFactor, arpgFront]);
+
   return (
     <div className="App" ref={appRef}>
       <canvas 
@@ -317,6 +469,7 @@ function App() {
         <div className="crt-overlay"></div>
       </div>
 
+      {/* ZPS Side Disk */}
       <canvas 
         ref={canvasRef}
         style={{
@@ -333,11 +486,14 @@ function App() {
         onMouseLeave={() => setIsZPSSideHovered(false)}
         onClick={() => {
           setIsZPSSideClicked(true);
+          setIsTdSideClicked(false);
+          setIsArpgSideClicked(false);
           setVideo('eLy7rmBwkqE');
           setIsMuted(false);
         }}
       />
 
+      {/* ZPS Front Disk */}
       <canvas 
         ref={zpsFrontCanvasRef}
         style={{
@@ -349,6 +505,88 @@ function App() {
           padding: 0,
           zIndex: 2,
           opacity: isZPSSideHovered && !isZPSSideClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
+      {/* Tower Defense Side Disk */}
+      <canvas 
+        ref={tdSideCanvasRef}
+        style={{
+          position: 'absolute',
+          top: isTdSideHovered ? "20.28%" : "22.28%",
+          left: "41.5%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsTdSideHovered(true)}
+        onMouseLeave={() => setIsTdSideHovered(false)}
+        onClick={() => {
+          setIsTdSideClicked(true);
+          setIsZPSSideClicked(false);
+          setIsArpgSideClicked(false);
+          setVideo('eLy7rmBwkqE'); // or your TD video
+          setIsMuted(false);
+        }}
+      />
+
+      {/* Tower Defense Front Disk */}
+      <canvas 
+        ref={tdFrontCanvasRef}
+        style={{
+          position: 'absolute',
+          top: isTdSideClicked ? "30%" : "10%",
+          left: isTdSideClicked ? "25%" : "41.5%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isTdSideHovered && !isTdSideClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
+      {/* ARPG Side Disk */}
+      <canvas 
+        ref={arpgSideCanvasRef}
+        style={{
+          position: 'absolute',
+          top: isArpgSideHovered ? "20.28%" : "22.28%",
+          left: "42%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s, left 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsArpgSideHovered(true)}
+        onMouseLeave={() => setIsArpgSideHovered(false)}
+        onClick={() => {
+          setIsArpgSideClicked(true);
+          setIsZPSSideClicked(false);
+          setIsTdSideClicked(false);
+          setVideo('jR6_nmcV2jo'); // or your ARPG video
+          setIsMuted(false);
+        }}
+      />
+
+      {/* ARPG Front Disk */}
+      <canvas 
+        ref={arpgFrontCanvasRef}
+        style={{
+          position: 'absolute',
+          top: isArpgSideClicked ? "30%" : "10%",
+          left: isArpgSideClicked ? "25%" : "42%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isArpgSideHovered && !isArpgSideClicked ? 1 : 0,
           transition: 'all 0.8s ease-in-out',
           cursor: 'pointer'
         }}
@@ -473,6 +711,56 @@ function App() {
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
         </button>
       )}
+
+      {/* Alternative: Game Preview with Screenshot */}
+      <div style={{
+        position: 'absolute',
+        top: '80%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: `${350 * scaleFactor}px`,
+        height: `${250 * scaleFactor}px`,
+        zIndex: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        borderRadius: '10px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
+      }}>
+        {/* Placeholder for game screenshot - replace with actual image */}
+        <div style={{
+          width: '100%',
+          height: '70%',
+          backgroundColor: '#2a2a2a',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#666',
+          fontSize: '14px'
+        }}>
+          [Game Screenshot Here]
+        </div>
+        <div style={{
+          padding: '15px',
+          textAlign: 'center'
+        }}>
+          <h4 style={{ color: 'white', margin: '0 0 10px 0' }}>01 Tower Defense</h4>
+          <button
+            onClick={() => window.open('https://gx.games/games/p42gse/01-tower-defense/', '_blank')}
+            style={{
+              backgroundColor: '#ff6b35',
+              color: 'white',
+              border: 'none',
+              padding: '8px 20px',
+              borderRadius: '15px',
+              fontSize: '14px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+          >
+            Play on GX.games
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

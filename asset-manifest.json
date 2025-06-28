@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/zpgwebsite/static/css/main.a196d94e.css",
-    "main.js": "/zpgwebsite/static/js/main.df5b0eef.js",
-    "static/js/453.59eee627.chunk.js": "/zpgwebsite/static/js/453.59eee627.chunk.js",
-    "static/media/steam-round-logo-icon-download-png-l6elakl5o.png": "/zpgwebsite/static/media/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.e9e6c90ead126ba41b6c.png",
-    "static/media/website_background_right_scaled.png": "/zpgwebsite/static/media/website_background_right_scaled.aa5eca2bc40cad36e6bc.png",
-    "static/media/website_background.png": "/zpgwebsite/static/media/website_background.36ded980ba387e17936f.png",
-    "static/media/bluesky-icon.png": "/zpgwebsite/static/media/bluesky-icon.506a1dfa16d3827dcb68.png",
-    "static/media/aav06vw3u.png": "/zpgwebsite/static/media/aav06vw3u.32b4de678a9eb45190f8.png",
-    "index.html": "/zpgwebsite/index.html",
-    "main.a196d94e.css.map": "/zpgwebsite/static/css/main.a196d94e.css.map",
-    "main.df5b0eef.js.map": "/zpgwebsite/static/js/main.df5b0eef.js.map",
-    "453.59eee627.chunk.js.map": "/zpgwebsite/static/js/453.59eee627.chunk.js.map"
+    "main.css": "/static/css/main.a196d94e.css",
+    "main.js": "/static/js/main.ec8b4998.js",
+    "static/js/453.59eee627.chunk.js": "/static/js/453.59eee627.chunk.js",
+    "static/media/steam-round-logo-icon-download-png-l6elakl5o.png": "/static/media/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.e9e6c90ead126ba41b6c.png",
+    "static/media/website_background_right_scaled.png": "/static/media/website_background_right_scaled.aa5eca2bc40cad36e6bc.png",
+    "static/media/website_background.png": "/static/media/website_background.36ded980ba387e17936f.png",
+    "static/media/bluesky-icon.png": "/static/media/bluesky-icon.506a1dfa16d3827dcb68.png",
+    "static/media/aav06vw3u.png": "/static/media/aav06vw3u.32b4de678a9eb45190f8.png",
+    "index.html": "/index.html",
+    "main.a196d94e.css.map": "/static/css/main.a196d94e.css.map",
+    "main.ec8b4998.js.map": "/static/js/main.ec8b4998.js.map",
+    "453.59eee627.chunk.js.map": "/static/js/453.59eee627.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a196d94e.css",
-    "static/js/main.df5b0eef.js"
+    "static/js/main.ec8b4998.js"
   ]
 }

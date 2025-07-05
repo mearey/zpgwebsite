@@ -23,7 +23,7 @@ import fishSideVinyl from "./images/vinyls/fishinside.png"
 import fishFrontVinyl from "./images/vinyls/fishinfront.png"
 
 // Import music files
-import fishingGameSong from "./music/fishin/fishinggamesong.wav"
+import fishingGameSong from "./music/fishin/fishinggamesong.mp3"
 import zpsLevel1Song from "./music/ZPS/Level1Song.wav"
 import zpsLevel2Song from "./music/ZPS/Level2Song.wav"
 import zpsLevel3Song from "./music/ZPS/Level3Song.wav"

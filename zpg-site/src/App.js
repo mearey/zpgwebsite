@@ -2,6 +2,7 @@ import siteheader from './websiteheader.png';
 import discordIcon from "./icons/aav06vw3u.png"
 import steamIcon from "./icons/steam-round-logo-icon-download-png-701751694966032dl6elakl5o.png"
 import blueskyIcon from "./icons/bluesky-icon.png"
+import youtubeIcon from "./icons/youtube_pixel.png"
 import iconOfSin from "./iconOFSIN.png"
 import backgroundImage from "./images/website_background.png"
 import backgroundImageRight from "./images/website_background_right_scaled.png"
@@ -12,6 +13,47 @@ import tdSide from "./images/disks/tdSide.png"
 import tdFront from "./images/disks/tdFront.png"
 import arpgSide from "./images/disks/arpgSide.png"
 import arpgFront from "./images/disks/arpgFront.png"
+import zpsSideVinyl from "./images/vinyls/zpsside.png"
+import zpsFrontVinyl from "./images/vinyls/zpsfront.png"
+import tdSideVinyl from "./images/vinyls/idside.png"
+import tdFrontVinyl from "./images/vinyls/tdfront.png"
+import arpgSideVinyl from "./images/vinyls/arpgside.png"
+import arpgFrontVinyl from "./images/vinyls/arpgfront.png"
+import fishSideVinyl from "./images/vinyls/fishinside.png"
+import fishFrontVinyl from "./images/vinyls/fishinfront.png"
+
+// Import music files
+import fishingGameSong from "./music/fishin/fishinggamesong.wav"
+import zpsLevel1Song from "./music/ZPS/Level1Song.wav"
+import zpsLevel2Song from "./music/ZPS/Level2Song.wav"
+import zpsLevel3Song from "./music/ZPS/Level3Song.wav"
+import zpsLevel4Song1 from "./music/ZPS/Level4song3.wav"
+import zpsLevel4Song2 from "./music/ZPS/Level4song4.wav"
+import zpsLevel1Var1 from "./music/ZPS/level1songvar1.wav"
+import zpsLevel1Var3 from "./music/ZPS/level1sonvar3.wav"
+import zpsLevel2Var2 from "./music/ZPS/level2Songvar2.wav"
+import zpsLevel2Var3 from "./music/ZPS/level2Songvar3.wav"
+import arpgTonightGrimes from "./music/arpg/Tonight Grimes Incredible Fortune.wav"
+import arpgTonightGives from "./music/arpg/Tonight Gives Incredible Fortune.wav"
+import arpgRatsOnMoon from "./music/arpg/Rats on the moon instrumental.wav"
+import arpgCasinoIndulgence from "./music/arpg/Casino Indulgence With Vacuuming.wav"
+import arpgWoodenRoom from "./music/arpg/wooden-room-171813.mp3"
+import arpgCheeseNew1 from "./music/arpg/cheesenew1.mp3"
+import arpgCheeseNew2 from "./music/arpg/cheesenew2.mp3"
+import arpgWashingMachine from "./music/arpg/Washing machine wallop.mp3"
+import arpgTimeForScience from "./music/arpg/Time For Science.mp3"
+import arpgTimeForScienceTown from "./music/arpg/Time For Science In Science Town.mp3"
+import arpgSmellyAmbient from "./music/arpg/Smelly Ambient....mp3"
+import arpgScienceMachineBroke from "./music/arpg/Sciencemachinebroke.mp3"
+import arpgRatsOnMoonMp3 from "./music/arpg/Rats on the moon.mp3"
+import arpgNerdBuilding from "./music/arpg/Nerd Building.mp3"
+import arpgMysteriousTwo from "./music/arpg/Mysterious...Two....mp3"
+import arpgMiceFight1 from "./music/arpg/Mice Fight.mp3"
+import arpgMiceFight2 from "./music/arpg/Mice Fight Two.mp3"
+import arpgCheeseMystery from "./music/arpg/Cheesemystery.mp3"
+import arpgCheeseCave from "./music/arpg/Cheese Cave.mp3"
+import arpgStompAndClaps from "./music/arpg/stomp-and-claps-127551.mp3"
+
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
@@ -28,7 +70,18 @@ function App() {
   const [isTdSideClicked, setIsTdSideClicked] = useState(false);
   const [isArpgSideHovered, setIsArpgSideHovered] = useState(false);
   const [isArpgSideClicked, setIsArpgSideClicked] = useState(false);
+  const [isZPSSideVinylHovered, setIsZPSSideVinylHovered] = useState(false);
+  const [isZPSSideVinylClicked, setIsZPSSideVinylClicked] = useState(false);
+  const [isTdSideVinylHovered, setIsTdSideVinylHovered] = useState(false);
+  const [isTdSideVinylClicked, setIsTdSideVinylClicked] = useState(false);
+  const [isArpgSideVinylHovered, setIsArpgSideVinylHovered] = useState(false);
+  const [isArpgSideVinylClicked, setIsArpgSideVinylClicked] = useState(false);
+  const [isFishSideVinylHovered, setIsFishSideVinylHovered] = useState(false);
+  const [isFishSideVinylClicked, setIsFishSideVinylClicked] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [currentAudio, setCurrentAudio] = useState(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [showRotateOverlay, setShowRotateOverlay] = useState(true);
   const [video, setVideo] = useState('');
   const [isMuted, setIsMuted] = useState(true);
   const canvasRef = useRef(null);
@@ -37,6 +90,14 @@ function App() {
   const tdFrontCanvasRef = useRef(null);
   const arpgSideCanvasRef = useRef(null);
   const arpgFrontCanvasRef = useRef(null);
+  const zpsSideVinylCanvasRef = useRef(null);
+  const zpsFrontVinylCanvasRef = useRef(null);
+  const tdSideVinylCanvasRef = useRef(null);
+  const tdFrontVinylCanvasRef = useRef(null);
+  const arpgSideVinylCanvasRef = useRef(null);
+  const arpgFrontVinylCanvasRef = useRef(null);
+  const fishSideVinylCanvasRef = useRef(null);
+  const fishFrontVinylCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
   const scrollLerpRef = useRef(null);
   const [scrollX, setScrollX] = useState(0);
@@ -44,6 +105,48 @@ function App() {
   const [appWidth, setAppWidth] = useState(window.innerWidth);
 
   const appRef = useRef(null);
+
+  // Music arrays
+  const zpsMusic = [
+    zpsLevel1Song, zpsLevel2Song, zpsLevel3Song, zpsLevel4Song1, zpsLevel4Song2,
+    zpsLevel1Var1, zpsLevel1Var3, zpsLevel2Var2, zpsLevel2Var3
+  ];
+  
+  const arpgMusic = [
+    arpgTonightGrimes, arpgTonightGives, arpgRatsOnMoon, arpgCasinoIndulgence,
+    arpgWoodenRoom, arpgCheeseNew1, arpgCheeseNew2, arpgWashingMachine,
+    arpgTimeForScience, arpgTimeForScienceTown, arpgSmellyAmbient, arpgScienceMachineBroke,
+    arpgRatsOnMoonMp3, arpgNerdBuilding, arpgMysteriousTwo, arpgMiceFight1,
+    arpgMiceFight2, arpgCheeseMystery, arpgCheeseCave, arpgStompAndClaps
+  ];
+  
+  const fishMusic = [fishingGameSong];
+
+  // Function to play random music from a given array
+  const playRandomMusic = (musicArray) => {
+    // Stop current audio if playing
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    
+    // Select random song
+    const randomIndex = Math.floor(Math.random() * musicArray.length);
+    const selectedMusic = musicArray[randomIndex];
+    
+    // Create new audio element
+    const audio = new Audio(selectedMusic);
+    audio.volume = 0.5; // Set volume to 50%
+    audio.loop = true; // Loop the music
+    
+    // Play the music
+    audio.play().then(() => {
+      setCurrentAudio(audio);
+      setIsAudioPlaying(true);
+    }).catch(error => {
+      console.error('Error playing audio:', error);
+    });
+  };
 
   // Store star data for twinkling
   const starsRef = useRef([]);
@@ -212,6 +315,46 @@ function App() {
       return () => clearTimeout(timer);
     }
   }, [isArpgSideClicked]);
+
+  useEffect(() => {
+    if (isZPSSideVinylClicked) {
+      const timer = setTimeout(() => {
+        setIsZPSSideVinylClicked(false);
+      }, 800);
+      setIsZPSSideVinylHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isZPSSideVinylClicked]);
+
+  useEffect(() => {
+    if (isTdSideVinylClicked) {
+      const timer = setTimeout(() => {
+        setIsTdSideVinylClicked(false);
+      }, 800);
+      setIsTdSideVinylHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isTdSideVinylClicked]);
+
+  useEffect(() => {
+    if (isArpgSideVinylClicked) {
+      const timer = setTimeout(() => {
+        setIsArpgSideVinylClicked(false);
+      }, 800);
+      setIsArpgSideVinylHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isArpgSideVinylClicked]);
+
+  useEffect(() => {
+    if (isFishSideVinylClicked) {
+      const timer = setTimeout(() => {
+        setIsFishSideVinylClicked(false);
+      }, 800);
+      setIsFishSideVinylHovered(false)
+      return () => clearTimeout(timer);
+    }
+  }, [isFishSideVinylClicked]);
 
   // Set max height of App container to match background image height
   useEffect(() => {
@@ -410,14 +553,270 @@ function App() {
     
     img.src = arpgFront;
   }, [dimensions.scaleFactor, arpgFront]);
+
+  // ZPS Side Vinyl
+  useEffect(() => {
+    const canvas = zpsSideVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = zpsSideVinyl;
+  }, [dimensions.scaleFactor, zpsSideVinyl]);
+
+  // ZPS Front Vinyl
+  useEffect(() => {
+    const canvas = zpsFrontVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * img.width * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = zpsFrontVinyl;
+  }, [dimensions.scaleFactor, zpsFrontVinyl]);
+
+  // Tower Defense Side Vinyl
+  useEffect(() => {
+    const canvas = tdSideVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = tdSideVinyl;
+  }, [dimensions.scaleFactor, tdSideVinyl]);
+
+  // Tower Defense Front Vinyl
+  useEffect(() => {
+    const canvas = tdFrontVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * img.width * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = tdFrontVinyl;
+  }, [dimensions.scaleFactor, tdFrontVinyl]);
+
+  // ARPG Side Vinyl
+  useEffect(() => {
+    const canvas = arpgSideVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = arpgSideVinyl;
+  }, [dimensions.scaleFactor, arpgSideVinyl]);
+
+  // ARPG Front Vinyl
+  useEffect(() => {
+    const canvas = arpgFrontVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * img.width * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = arpgFrontVinyl;
+  }, [dimensions.scaleFactor, arpgFrontVinyl]);
+
+  // Fish Side Vinyl
+  useEffect(() => {
+    const canvas = fishSideVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = fishSideVinyl;
+  }, [dimensions.scaleFactor, fishSideVinyl]);
+
+  // Fish Front Vinyl
+  useEffect(() => {
+    const canvas = fishFrontVinylCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * img.width * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+    
+    img.src = fishFrontVinyl;
+  }, [dimensions.scaleFactor, fishFrontVinyl]);
   console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow });
   return (
     <div className="App" ref={appRef}>
-      <div className="rotate-device-overlay">
-        Please rotate your device for the best experience!
-        <br />
-        <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
-      </div>
+      {showRotateOverlay && (
+        <div className="rotate-device-overlay">
+          Please rotate your device for the best experience!
+          <br />
+          <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
+          <button 
+            onClick={() => setShowRotateOverlay(false)}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#333',
+              color: '#fff',
+              border: '2px solid #666',
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#555'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#333'}
+          >
+            No thanks
+          </button>
+        </div>
+      )}
       <canvas 
         ref={starfieldRef}
         style={{
@@ -436,7 +835,7 @@ function App() {
         src={backgroundImageRight}
         style={{
           position: 'absolute',
-          top: 0,
+          top: "5%",
           left: '45.6vw',
           width: `${backgroundImageWidth * scaleFactor}px`,
           height: 'auto',
@@ -451,7 +850,7 @@ function App() {
         src={backgroundImage} 
         style={{
           position: 'absolute',
-          top: 0,
+          top: '5%',
           left: 0,
           width: `${backgroundImageWidth * scaleFactor}px`,
           height: 'auto',
@@ -465,7 +864,7 @@ function App() {
       {/* Custom Shaped YouTube Player */}
       <div className="crt-effect" style={{
         position: 'absolute',
-        top: '10.28%',
+        top: '15.28%',
         left: '14.635%',
         width: `${147 * scaleFactor}px`,
         height: `${124 * scaleFactor}px`,
@@ -499,7 +898,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isZPSSideHovered ? "20.28%" : "22.28%",
+          top: isZPSSideHovered ? "25.28%" : "27.28%",
           left: "62%",
           margin: 0,
           padding: 0,
@@ -524,7 +923,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isZPSSideClicked ? "30%" : "10%",
+          top: isZPSSideClicked ? "35%" : "15%",
           left: isZPSSideClicked ? "25%" : "62%",
           transform: 'translateX(-50%)',
           margin: 0,
@@ -542,7 +941,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isTdSideHovered ? "20.28%" : "22.28%",
+          top: isTdSideHovered ? "25.28%" : "27.28%",
           left: "62.75%",
           margin: 0,
           padding: 0,
@@ -567,7 +966,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isTdSideClicked ? "30%" : "10%",
+          top: isTdSideClicked ? "35%" : "15%",
           left: isTdSideClicked ? "25%" : "62.75%",
           transform: 'translateX(-50%)',
           margin: 0,
@@ -585,7 +984,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isArpgSideHovered ? "20.28%" : "22.28%",
+          top: isArpgSideHovered ? "25.28%" : "27.28%",
           left: "63.5%",
           margin: 0,
           padding: 0,
@@ -610,7 +1009,7 @@ function App() {
         className="disk-canvas"
         style={{
           position: 'absolute',
-          top: isArpgSideClicked ? "30%" : "10%",
+          top: isArpgSideClicked ? "35%" : "15%",
           left: isArpgSideClicked ? "25%" : "63.5%",
           transform: 'translateX(-50%)',
           margin: 0,
@@ -622,12 +1021,184 @@ function App() {
         }}
       />
 
+      {/* ZPS Side Vinyl */}
+      <canvas 
+        ref={zpsSideVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isZPSSideVinylHovered ? "12.28%" : "14.28%",
+          left: "105%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsZPSSideVinylHovered(true)}
+        onMouseLeave={() => setIsZPSSideVinylHovered(false)}
+        onClick={() => {
+          setIsZPSSideVinylClicked(true);
+          setIsTdSideVinylClicked(false);
+          setIsArpgSideVinylClicked(false);
+          setIsFishSideVinylClicked(false);
+          playRandomMusic(zpsMusic);
+        }}
+      />
+
+      {/* ZPS Front Vinyl */}
+      <canvas 
+        ref={zpsFrontVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isZPSSideVinylClicked ? "22%" : "2%",
+          left: isZPSSideVinylClicked ? "112.75%" : "105%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isZPSSideVinylHovered && !isZPSSideVinylClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
+      {/* Tower Defense Side Vinyl */}
+      <canvas 
+        ref={tdSideVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isTdSideVinylHovered ? "12.28%" : "14.28%",
+          left: "105.75%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsTdSideVinylHovered(true)}
+        onMouseLeave={() => setIsTdSideVinylHovered(false)}
+        onClick={() => {
+          setIsTdSideVinylClicked(true);
+          setIsZPSSideVinylClicked(false);
+          setIsArpgSideVinylClicked(false);
+          setIsFishSideVinylClicked(false);
+          // No music for Tower Defense yet
+        }}
+      />
+
+      {/* Tower Defense Front Vinyl */}
+      <canvas 
+        ref={tdFrontVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isTdSideVinylClicked ? "22%" : "2%",
+          left: isTdSideVinylClicked ? "112.75%" : "105.75%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isTdSideVinylHovered && !isTdSideVinylClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
+      {/* ARPG Side Vinyl */}
+      <canvas 
+        ref={arpgSideVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isArpgSideVinylHovered ? "12.28%" : "14.28%",
+          left: "106.5%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsArpgSideVinylHovered(true)}
+        onMouseLeave={() => setIsArpgSideVinylHovered(false)}
+        onClick={() => {
+          setIsArpgSideVinylClicked(true);
+          setIsZPSSideVinylClicked(false);
+          setIsTdSideVinylClicked(false);
+          setIsFishSideVinylClicked(false);
+          playRandomMusic(arpgMusic);
+        }}
+      />
+
+      {/* ARPG Front Vinyl */}
+      <canvas 
+        ref={arpgFrontVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isArpgSideVinylClicked ? "22%" : "2%",
+          left: isArpgSideVinylClicked ? "112.75%" : "106.5%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isArpgSideVinylHovered && !isArpgSideVinylClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
+      {/* Fish Side Vinyl */}
+      <canvas 
+        ref={fishSideVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isFishSideVinylHovered ? "12.28%" : "14.28%",
+          left: "107.25%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => setIsFishSideVinylHovered(true)}
+        onMouseLeave={() => setIsFishSideVinylHovered(false)}
+        onClick={() => {
+          setIsFishSideVinylClicked(true);
+          setIsZPSSideVinylClicked(false);
+          setIsTdSideVinylClicked(false);
+          setIsArpgSideVinylClicked(false);
+          playRandomMusic(fishMusic);
+        }}
+      />
+
+      {/* Fish Front Vinyl */}
+      <canvas 
+        ref={fishFrontVinylCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isFishSideVinylClicked ? "22%" : "2%",
+          left: isFishSideVinylClicked ? "112.75%" : "107.25%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isFishSideVinylHovered && !isFishSideVinylClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
       <img 
         src={DiskTop} 
         className="disk-holder"
         style={{
           position: 'absolute',
-          top: "26.485%",
+          top: "31.485%",
           left: "60.76%",
           width: `${diskTopWidth * scaleFactor}px`,
           height: 'auto',
@@ -656,37 +1227,25 @@ function App() {
             className="header-image"
             alt="Header"
           />
-          <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"25px"}}>
+          <a href="https://www.youtube.com/@Zero_Point_Games" target='_blank' style={{ position:"absolute",left:"25px"}}>
+            <input type="image" class="icon" src={youtubeIcon} ></input>
+          </a>
+          <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"75px"}}>
             <input type="image" class="icon" src={discordIcon} ></input>
           </a>
-          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"75px"}}>
+          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"125px"}}>
             <input class="icon" type="image" src={steamIcon}></input>
           </a>
           <a
             href="https://bsky.app/profile/zero-point-games.bsky.social"
             target="_blank"
-            style={{ position: 'absolute', left: '125px' }}
+            style={{ position: 'absolute', left: '175px' }}
           >
             <input className="icon" type="image" src={blueskyIcon}></input>
           </a>
           <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin} className="top-logo" />
         </div>
       </header>
-
-      {/* Wide scrollable div for testing horizontal scroll */}
-      <div style={{
-        width: '200vw',
-        height: 100,
-        background: 'linear-gradient(90deg, #444, #888)',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: 32,
-        marginTop: 32
-      }}>
-        Scroll me!
-      </div>
 
       {/* Floating right arrow button */}
       {showLeftArrow && (

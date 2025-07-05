@@ -21,6 +21,19 @@ import arpgSideVinyl from "./images/vinyls/arpgside.png"
 import arpgFrontVinyl from "./images/vinyls/arpgfront.png"
 import fishSideVinyl from "./images/vinyls/fishinside.png"
 import fishFrontVinyl from "./images/vinyls/fishinfront.png"
+import arrowSprite from "./images/arrow.png"
+import char1 from "./images/char1.png"
+import char2 from "./images/char2.png"
+import char3 from "./images/char3.png"
+import char4 from "./images/char4.png"
+import char5 from "./images/char5.png"
+import char6 from "./images/char6.png"
+import char7 from "./images/char7.png"
+import char8 from "./images/char8.png"
+import char9 from "./images/char9.png"
+import char10 from "./images/char10.png"
+import char11 from "./images/char11.png"
+import char12 from "./images/char12.png"
 
 // Import music files
 import fishingGameSong from "./music/fishin/fishinggamesong.mp3"
@@ -82,8 +95,12 @@ function App() {
   const [currentAudio, setCurrentAudio] = useState(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [showRotateOverlay, setShowRotateOverlay] = useState(true);
+  const [floatingCharacters, setFloatingCharacters] = useState([]);
   const [video, setVideo] = useState('');
   const [isMuted, setIsMuted] = useState(true);
+
+  // Character sprites array
+  const characterSprites = [char1, char2, char3, char4, char5, char6, char7, char8, char9, char10, char11, char12];
   const canvasRef = useRef(null);
   const zpsFrontCanvasRef = useRef(null);
   const tdSideCanvasRef = useRef(null);
@@ -98,6 +115,9 @@ function App() {
   const arpgFrontVinylCanvasRef = useRef(null);
   const fishSideVinylCanvasRef = useRef(null);
   const fishFrontVinylCanvasRef = useRef(null);
+  const leftArrowCanvasRef = useRef(null);
+  const rightArrowCanvasRef = useRef(null);
+  const characterCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
   const scrollLerpRef = useRef(null);
   const [scrollX, setScrollX] = useState(0);
@@ -227,6 +247,120 @@ function App() {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
   }, [dimensions.scaleFactor]);
+
+  // Floating Characters
+  useEffect(() => {
+    const canvas = characterCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const scaleFactor = dimensions.scaleFactor;
+    
+    // Set canvas size to match viewport
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Initialize floating characters
+    const initCharacters = () => {
+      const characters = [];
+      const numCharacters = 8; // Number of floating characters
+      
+      console.log('Initializing characters with canvas size:', canvas.width, canvas.height);
+      
+      for (let i = 0; i < numCharacters; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const vx = (Math.random() - 0.5) * 2
+        const vy = (Math.random() - 0.5) * 2
+        
+        characters.push({
+          x: x,
+          y: y,
+          vx: vx,
+          vy: vy,
+          sprite: characterSprites[Math.floor(Math.random() * characterSprites.length)],
+          size: 32, // Original character size (no scaling)
+          loaded: false,
+          img: null
+        });
+        
+        console.log(`Character ${i} initialized at (${x.toFixed(2)}, ${y.toFixed(2)}) with velocity (${vx.toFixed(6)}, ${vy.toFixed(6)})`);
+      }
+      setFloatingCharacters(characters);
+      return characters; // Return the characters for immediate use
+    };
+
+    // Load character images
+    const loadCharacterImages = (characters) => {
+      console.log('Loading character images...');
+      for (let i = 0; i < characters.length; i++) {
+        const char = characters[i];
+        if (char.loaded) continue;
+
+        console.log(`Loading character ${i} sprite:`, char.sprite);
+        const img = new Image();
+        img.onload = () => {
+          console.log(`Character ${i} image loaded successfully`);
+          characters[i].loaded = true;
+          characters[i].img = img;
+        };
+        img.onerror = () => {
+          console.error(`Failed to load character ${i} sprite:`, char.sprite);
+        };
+        img.src = char.sprite;
+      }
+    };
+
+    // Animation function
+    const animateCharacters = (characters) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      characters.forEach((char, index) => {
+        if (!char.loaded || !char.img) {
+          return;
+        }
+
+        // Update position
+        char.x += char.vx;
+        char.y += char.vy;
+
+        // Bounce off edges
+        if (char.x <= 0 || char.x >= canvas.width - char.size) {
+          char.vx = -char.vx;
+          char.x = Math.max(0, Math.min(canvas.width - char.size, char.x));
+        }
+        if (char.y <= 0 || char.y >= canvas.height - char.size) {
+          char.vy = -char.vy;
+          char.y = Math.max(0, Math.min(canvas.height - char.size, char.y));
+        }
+
+        // Draw character with pixel-perfect rendering
+        ctx.imageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        
+        // Use actual image dimensions to maintain aspect ratio
+        const imgWidth = char.img.width;
+        const imgHeight = char.img.height;
+        ctx.drawImage(char.img, char.x, char.y, imgWidth, imgHeight);
+        
+
+      });
+
+      requestAnimationFrame(() => animateCharacters(characters));
+    };
+
+    // Initialize and start animation
+    const characters = initCharacters();
+    loadCharacterImages(characters);
+    animateCharacters(characters);
+
+    // Cleanup
+    return () => {
+      // Animation will stop when component unmounts
+    };
+  }, []); // Only run once on mount
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -789,7 +923,90 @@ function App() {
     
     img.src = fishFrontVinyl;
   }, [dimensions.scaleFactor, fishFrontVinyl]);
-  console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow });
+
+  // Left Arrow Canvas
+  useEffect(() => {
+    console.log('Left arrow canvas useEffect triggered');
+    
+    // Use a small timeout to ensure the canvas element exists
+    const timer = setTimeout(() => {
+      const canvas = leftArrowCanvasRef.current;
+      if (!canvas) {
+        console.log('Left arrow canvas ref is null after timeout');
+        return;
+      }
+
+      console.log('Arrow sprite import value:', arrowSprite);
+      console.log('Left arrow canvas useEffect running');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+    
+    img.onload = () => {
+      console.log('Left arrow image loaded successfully:', { imgWidth: img.width, imgHeight: img.height });
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * 32;
+      const scaledHeight = scaleFactor * 32;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+      console.log('Left arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor, imgWidth: img.width, imgHeight: img.height });
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load left arrow sprite:', arrowSprite);
+      console.error('Arrow sprite path:', arrowSprite);
+    };
+    
+    img.src = arrowSprite;
+    }, 100); // 100ms timeout
+    
+    return () => clearTimeout(timer);
+  }, [dimensions.scaleFactor, arrowSprite, showLeftArrow]);
+
+  // Right Arrow Canvas
+  useEffect(() => {
+    const canvas = rightArrowCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * 32;
+      const scaledHeight = scaleFactor * 32;
+      
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+      console.log('Right arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor });
+    };
+    
+    img.onerror = () => {
+      console.error('Failed to load right arrow sprite:', arrowSprite);
+    };
+    
+    img.src = arrowSprite;
+  }, [dimensions.scaleFactor, arrowSprite]);
+
+  console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow, atFarLeft, atFarRight });
   return (
     <div className="App" ref={appRef}>
       {showRotateOverlay && (
@@ -827,6 +1044,20 @@ function App() {
           padding: 0,
           zIndex: -0.5,
           transform: `translateY(${scrollY * -0.3}px)`
+        }}
+      />
+      
+      {/* Floating Characters Canvas */}
+      <canvas 
+        ref={characterCanvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          margin: 0,
+          padding: 0,
+          zIndex: -0.3,
+          pointerEvents: 'none'
         }}
       />
       
@@ -1228,13 +1459,13 @@ function App() {
             alt="Header"
           />
           <a href="https://www.youtube.com/@Zero_Point_Games" target='_blank' style={{ position:"absolute",left:"25px"}}>
-            <input type="image" class="icon" src={youtubeIcon} ></input>
+            <input type="image" className="icon" src={youtubeIcon} ></input>
           </a>
           <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"75px"}}>
-            <input type="image" class="icon" src={discordIcon} ></input>
+            <input type="image" className="icon" src={discordIcon} ></input>
           </a>
           <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"125px"}}>
-            <input class="icon" type="image" src={steamIcon}></input>
+            <input className="icon" type="image" src={steamIcon}></input>
           </a>
           <a
             href="https://bsky.app/profile/zero-point-games.bsky.social"
@@ -1247,17 +1478,20 @@ function App() {
         </div>
       </header>
 
-      {/* Floating right arrow button */}
+
+      {/* Floating left arrow button */}
       {showLeftArrow && (
         <button
           className="floating-arrow"
           onClick={() => handleArrowClick(true)}
+          onLoad={() => console.log('Left arrow button rendered, showLeftArrow:', showLeftArrow)}
+          onMouseEnter={() => console.log('Left arrow canvas ref:', leftArrowCanvasRef.current)}
           style={{
             position: 'fixed',
             top: '50%',
             left: '24px',
             zIndex: 2000,
-            background: 'rgba(30,30,30,0.7)',
+            background: 'rgba(30, 30, 30, 0)',
             border: 'none',
             borderRadius: '50%',
             width: '48px',
@@ -1265,15 +1499,25 @@ function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
             cursor: 'pointer',
             transition: 'background 0.2s',
           }}
           aria-label="Scroll left"
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
+          <canvas 
+            ref={leftArrowCanvasRef}
+            style={{
+              width: '32px',
+              height: '32px',
+              transform: 'rotate(90deg)',
+              backgroundColor: 'rgba(255, 0, 0, 0)' // Temporary red background to see canvas
+            }}
+            onLoad={() => console.log('Left arrow canvas DOM element loaded')}
+          />
         </button>
       )}
+      {/* Floating right arrow button */}
       {true && (
         <button
           className="floating-arrow"
@@ -1283,7 +1527,7 @@ function App() {
             top: '50%',
             right: '24px',
             zIndex: 2000,
-            background: 'rgba(30,30,30,0.7)',
+            background: 'rgba(30, 30, 30, 0)',
             border: 'none',
             borderRadius: '50%',
             width: '48px',
@@ -1291,13 +1535,20 @@ function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
             cursor: 'pointer',
             transition: 'background 0.2s',
           }}
           aria-label="Scroll right"
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6" /></svg>
+          <canvas 
+            ref={rightArrowCanvasRef}
+            style={{
+              width: '32px',
+              height: '32px',
+              transform: 'rotate(-90deg)'
+            }}
+          />
         </button>
       )}
     </div>

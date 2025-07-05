@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.15a8e641.css",
-    "main.js": "/static/js/main.3e093233.js",
+    "main.css": "/static/css/main.150f0584.css",
+    "main.js": "/static/js/main.b7ca1824.js",
     "static/js/453.59eee627.chunk.js": "/static/js/453.59eee627.chunk.js",
     "static/media/level1sonvar3.wav": "/static/media/level1sonvar3.2fd6d69908386f9caa38.wav",
     "static/media/level2Songvar2.wav": "/static/media/level2Songvar2.8347868cb7218a90852a.wav",
@@ -34,14 +34,14 @@
     "static/media/Sciencemachinebroke.mp3": "/static/media/Sciencemachinebroke.902adb7c1b380284a2d3.mp3",
     "static/media/Mice Fight.mp3": "/static/media/Mice Fight.8de4ab0c426c1e4c3bfa.mp3",
     "static/media/website_background_right_scaled.png": "/static/media/website_background_right_scaled.aa5eca2bc40cad36e6bc.png",
-    "static/media/website_background.png": "/static/media/website_background.36ded980ba387e17936f.png",
+    "static/media/website_background.png": "/static/media/website_background.22fa6fdf6e0fae20c930.png",
     "index.html": "/index.html",
-    "main.15a8e641.css.map": "/static/css/main.15a8e641.css.map",
-    "main.3e093233.js.map": "/static/js/main.3e093233.js.map",
+    "main.150f0584.css.map": "/static/css/main.150f0584.css.map",
+    "main.b7ca1824.js.map": "/static/js/main.b7ca1824.js.map",
     "453.59eee627.chunk.js.map": "/static/js/453.59eee627.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.15a8e641.css",
-    "static/js/main.3e093233.js"
+    "static/css/main.150f0584.css",
+    "static/js/main.b7ca1824.js"
   ]
 }

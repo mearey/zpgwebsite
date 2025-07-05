@@ -96,6 +96,7 @@ function App() {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [showRotateOverlay, setShowRotateOverlay] = useState(true);
   const [floatingCharacters, setFloatingCharacters] = useState([]);
+  const [showFloatingArrow, setShowFloatingArrow] = useState(true);
   const [video, setVideo] = useState('');
   const [isMuted, setIsMuted] = useState(true);
 
@@ -118,6 +119,7 @@ function App() {
   const leftArrowCanvasRef = useRef(null);
   const rightArrowCanvasRef = useRef(null);
   const characterCanvasRef = useRef(null);
+  const floatingArrowCanvasRef = useRef(null);
   const starfieldRef = useRef(null);
   const scrollLerpRef = useRef(null);
   const [scrollX, setScrollX] = useState(0);
@@ -361,6 +363,73 @@ function App() {
       // Animation will stop when component unmounts
     };
   }, []); // Only run once on mount
+
+  // Floating Arrow
+  useEffect(() => {
+    const canvas = floatingArrowCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const scaleFactor = dimensions.scaleFactor;
+    
+    // Set canvas size to match viewport
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Arrow properties
+    const arrow = {
+      x: window.innerWidth * 0.62, // Position above disks
+      y: window.innerHeight * 0.2, // Start position
+      targetY: window.innerHeight * 0.15, // Target position for floating
+      speed: 2, // Floating speed
+      size: 32, // Arrow size
+      loaded: false,
+      img: null
+    };
+
+    // Load arrow image
+    const img = new Image();
+    img.onload = () => {
+      arrow.loaded = true;
+      arrow.img = img;
+    };
+    img.src = arrowSprite;
+
+    // Animation function
+    const animateArrow = () => {
+      if (!showFloatingArrow) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        requestAnimationFrame(animateArrow);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (arrow.loaded && arrow.img) {
+        // Float up and down
+        const time = Date.now() * 0.001;
+        arrow.y = arrow.targetY + Math.sin(time * arrow.speed) * 10;
+
+        // Draw arrow with pixel-perfect rendering
+        ctx.imageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        
+        ctx.drawImage(arrow.img, arrow.x, arrow.y, arrow.size, arrow.size);
+      }
+
+      requestAnimationFrame(animateArrow);
+    };
+
+    // Start animation
+    animateArrow();
+
+    // Cleanup
+    return () => {
+      // Animation will stop when component unmounts
+    };
+  }, [showFloatingArrow, dimensions.scaleFactor]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1061,6 +1130,20 @@ function App() {
         }}
       />
       
+      {/* Floating Arrow Canvas */}
+      <canvas 
+        ref={floatingArrowCanvasRef}
+        style={{
+          position: 'absolute',
+          top: "20%",
+          left: 0,
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          pointerEvents: 'none'
+        }}
+      />
+      
       {/* Right background image, starts at 50% of viewport width */}
       <img 
         src={backgroundImageRight}
@@ -1145,6 +1228,7 @@ function App() {
           setIsArpgSideClicked(false);
           setVideo('eLy7rmBwkqE');
           setIsMuted(false);
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1188,6 +1272,7 @@ function App() {
           setIsArpgSideClicked(false);
           setVideo('eLy7rmBwkqE');
           setIsMuted(false);
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1231,6 +1316,7 @@ function App() {
           setIsTdSideClicked(false);
           setVideo('jR6_nmcV2jo');
           setIsMuted(false);
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1274,6 +1360,7 @@ function App() {
           setIsArpgSideVinylClicked(false);
           setIsFishSideVinylClicked(false);
           playRandomMusic(zpsMusic);
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1317,6 +1404,7 @@ function App() {
           setIsArpgSideVinylClicked(false);
           setIsFishSideVinylClicked(false);
           // No music for Tower Defense yet
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1360,6 +1448,7 @@ function App() {
           setIsTdSideVinylClicked(false);
           setIsFishSideVinylClicked(false);
           playRandomMusic(arpgMusic);
+          setShowFloatingArrow(false);
         }}
       />
 
@@ -1403,6 +1492,7 @@ function App() {
           setIsTdSideVinylClicked(false);
           setIsArpgSideVinylClicked(false);
           playRandomMusic(fishMusic);
+          setShowFloatingArrow(false);
         }}
       />
 

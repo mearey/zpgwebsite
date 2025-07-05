@@ -1,9 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.15a8e641.css",
-    "main.js": "/static/js/main.55d01df4.js",
+    "main.js": "/static/js/main.3e093233.js",
     "static/js/453.59eee627.chunk.js": "/static/js/453.59eee627.chunk.js",
-    "static/media/fishinggamesong.wav": "/static/media/fishinggamesong.e902f6d59a00528eb6e5.wav",
     "static/media/level1sonvar3.wav": "/static/media/level1sonvar3.2fd6d69908386f9caa38.wav",
     "static/media/level2Songvar2.wav": "/static/media/level2Songvar2.8347868cb7218a90852a.wav",
     "static/media/level1songvar1.wav": "/static/media/level1songvar1.3bccca8902cd72e6cbed.wav",
@@ -17,6 +16,7 @@
     "static/media/Casino Indulgence With Vacuuming.wav": "/static/media/Casino Indulgence With Vacuuming.5b54467d0f10896fd7a1.wav",
     "static/media/Tonight Grimes Incredible Fortune.wav": "/static/media/Tonight Grimes Incredible Fortune.390e0609c2db55aea528.wav",
     "static/media/Tonight Gives Incredible Fortune.wav": "/static/media/Tonight Gives Incredible Fortune.51519052ab585bd46727.wav",
+    "static/media/fishinggamesong.mp3": "/static/media/fishinggamesong.9ef1e60275a7d10ae762.mp3",
     "static/media/cheesenew2.mp3": "/static/media/cheesenew2.e6b1188b52e030d6c83d.mp3",
     "static/media/Rats on the moon.mp3": "/static/media/Rats on the moon.789b501e3f8314788d5a.mp3",
     "static/media/wooden-room-171813.mp3": "/static/media/wooden-room-171813.8247dbe418e47ec5f105.mp3",
@@ -37,11 +37,11 @@
     "static/media/website_background.png": "/static/media/website_background.36ded980ba387e17936f.png",
     "index.html": "/index.html",
     "main.15a8e641.css.map": "/static/css/main.15a8e641.css.map",
-    "main.55d01df4.js.map": "/static/js/main.55d01df4.js.map",
+    "main.3e093233.js.map": "/static/js/main.3e093233.js.map",
     "453.59eee627.chunk.js.map": "/static/js/453.59eee627.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.15a8e641.css",
-    "static/js/main.55d01df4.js"
+    "static/js/main.3e093233.js"
   ]
 }

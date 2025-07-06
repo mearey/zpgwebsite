@@ -1,5 +1,9 @@
 ::-webkit-scrollbar {display:none;}
 
+html, body {
+  background: #171924 !important;
+}
+
 .App {
   text-align: center;
   background-color: #171924;

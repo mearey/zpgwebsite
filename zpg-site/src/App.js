@@ -377,20 +377,21 @@ function App() {
       const arrowSize = 16;
       const scaledWidth = scaleFactor * arrowSize * 1.3;
       const scaledHeight = scaleFactor * arrowSize * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the arrow image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
     img.src = arrowSprite;
   }, [dimensions.scaleFactor, arrowSprite]);
 
@@ -406,20 +407,21 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
     img.src = ZPSSide;
   }, [dimensions.scaleFactor, ZPSSide]);
 
@@ -435,16 +437,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -613,16 +617,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -643,16 +649,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -673,16 +681,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -703,16 +713,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -733,16 +745,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -762,16 +776,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -792,16 +808,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -821,16 +839,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -851,16 +871,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -880,16 +902,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -910,16 +934,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * diskWidth * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -939,16 +965,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
       const scaledHeight = scaleFactor * img.height * 1.3;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
@@ -978,16 +1006,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * 32;
       const scaledHeight = scaleFactor * 32;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
       console.log('Left arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor, imgWidth: img.width, imgHeight: img.height });
@@ -1016,16 +1046,18 @@ function App() {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * 32;
       const scaledHeight = scaleFactor * 32;
-      
-      canvas.width = scaledWidth;
-      canvas.height = scaledHeight;
-      
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
       // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
       console.log('Right arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor });

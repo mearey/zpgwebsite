@@ -370,66 +370,29 @@ function App() {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const scaleFactor = dimensions.scaleFactor;
-    
-    // Set canvas size to match viewport
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Arrow properties
-    const arrow = {
-      x: window.innerWidth * 0.62, // Position above disks
-      y: window.innerHeight * 0.2, // Start position
-      targetY: window.innerHeight * 0.15, // Target position for floating
-      speed: 2, // Floating speed
-      size: 32, // Arrow size
-      loaded: false,
-      img: null
-    };
-
-    // Load arrow image
     const img = new Image();
+    
     img.onload = () => {
-      arrow.loaded = true;
-      arrow.img = img;
-    };
-    img.src = arrowSprite;
-
-    // Animation function
-    const animateArrow = () => {
-      if (!showFloatingArrow) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        requestAnimationFrame(animateArrow);
-        return;
-      }
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const scaleFactor = dimensions.scaleFactor;
+      const arrowSize = 16;
+      const scaledWidth = scaleFactor * arrowSize * 1.3;
+      const scaledHeight = scaleFactor * arrowSize * 1.3;
       
-      if (arrow.loaded && arrow.img) {
-        // Float up and down
-        const time = Date.now() * 0.001;
-        arrow.y = arrow.targetY + Math.sin(time * arrow.speed) * 10;
-
-        // Draw arrow with pixel-perfect rendering
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
-        
-        ctx.drawImage(arrow.img, arrow.x, arrow.y, arrow.size, arrow.size);
-      }
-
-      requestAnimationFrame(animateArrow);
+      canvas.width = scaledWidth;
+      canvas.height = scaledHeight;
+      
+      // Disable image smoothing for pixel-perfect rendering
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      
+      // Draw the arrow image with pixel-perfect scaling
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-
-    // Start animation
-    animateArrow();
-
-    // Cleanup
-    return () => {
-      // Animation will stop when component unmounts
-    };
-  }, [showFloatingArrow, dimensions.scaleFactor]);
+    
+    img.src = arrowSprite;
+  }, [dimensions.scaleFactor, arrowSprite]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1078,457 +1041,6 @@ function App() {
   console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow, atFarLeft, atFarRight });
   return (
     <div className="App" ref={appRef}>
-      {showRotateOverlay && (
-        <div className="rotate-device-overlay">
-          Please rotate your device for the best experience!
-          <br />
-          <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
-          <button 
-            onClick={() => setShowRotateOverlay(false)}
-            style={{
-              marginTop: '20px',
-              padding: '10px 20px',
-              backgroundColor: '#333',
-              color: '#fff',
-              border: '2px solid #666',
-              borderRadius: '5px',
-              fontSize: '16px',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#555'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#333'}
-          >
-            No thanks
-          </button>
-        </div>
-      )}
-      <canvas 
-        ref={starfieldRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          margin: 0,
-          padding: 0,
-          zIndex: -0.5,
-          transform: `translateY(${scrollY * -0.3}px)`
-        }}
-      />
-      
-      {/* Floating Characters Canvas */}
-      <canvas 
-        ref={characterCanvasRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          margin: 0,
-          padding: 0,
-          zIndex: -0.3,
-          pointerEvents: 'none'
-        }}
-      />
-      
-      {/* Floating Arrow Canvas */}
-      <canvas 
-        ref={floatingArrowCanvasRef}
-        style={{
-          position: 'absolute',
-          top: "20%",
-          left: 0,
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          pointerEvents: 'none'
-        }}
-      />
-      
-      {/* Right background image, starts at 50% of viewport width */}
-      <img 
-        src={backgroundImageRight}
-        style={{
-          position: 'absolute',
-          top: "5%",
-          left: '45.6vw',
-          width: `${backgroundImageWidth * scaleFactor}px`,
-          height: 'auto',
-          margin: 0,
-          padding: 0,
-          zIndex: -0.2
-        }}
-        alt="Background Right"
-      />
-
-      <img 
-        src={backgroundImage} 
-        style={{
-          position: 'absolute',
-          top: '5%',
-          left: 0,
-          width: `${backgroundImageWidth * scaleFactor}px`,
-          height: 'auto',
-          margin: 0,
-          padding: 0,
-          zIndex: 0
-        }}
-        alt="Background"
-      />
-
-      {/* Custom Shaped YouTube Player */}
-      <div className="crt-effect" style={{
-        position: 'absolute',
-        top: '15.28%',
-        left: '14.635%',
-        width: `${147 * scaleFactor}px`,
-        height: `${124 * scaleFactor}px`,
-        zIndex: -0.1,
-        maskImage: maskUrl,
-        WebkitMaskImage: maskUrl,
-        backgroundColor: 'black'
-      }}>
-        {video && (
-          <iframe
-            src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${video}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
-            title="Background Video"
-            style={{
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '150%',
-              height: '100%',
-              border: 'none'
-            }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        )}
-        <div className="crt-overlay"></div>
-      </div>
-
-      {/* ZPS Side Disk */}
-      <canvas 
-        ref={canvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isZPSSideHovered ? "25.28%" : "27.28%",
-          left: "62%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsZPSSideHovered(true)}
-        onMouseLeave={() => setIsZPSSideHovered(false)}
-        onClick={() => {
-          setIsZPSSideClicked(true);
-          setIsTdSideClicked(false);
-          setIsArpgSideClicked(false);
-          setVideo('eLy7rmBwkqE');
-          setIsMuted(false);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* ZPS Front Disk */}
-      <canvas 
-        ref={zpsFrontCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isZPSSideClicked ? "35%" : "15%",
-          left: isZPSSideClicked ? "25%" : "62%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isZPSSideHovered && !isZPSSideClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* Tower Defense Side Disk */}
-      <canvas 
-        ref={tdSideCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isTdSideHovered ? "25.28%" : "27.28%",
-          left: "62.75%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsTdSideHovered(true)}
-        onMouseLeave={() => setIsTdSideHovered(false)}
-        onClick={() => {
-          setIsTdSideClicked(true);
-          setIsZPSSideClicked(false);
-          setIsArpgSideClicked(false);
-          setVideo('eLy7rmBwkqE');
-          setIsMuted(false);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* Tower Defense Front Disk */}
-      <canvas 
-        ref={tdFrontCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isTdSideClicked ? "35%" : "15%",
-          left: isTdSideClicked ? "25%" : "62.75%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isTdSideHovered && !isTdSideClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* ARPG Side Disk */}
-      <canvas 
-        ref={arpgSideCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isArpgSideHovered ? "25.28%" : "27.28%",
-          left: "63.5%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsArpgSideHovered(true)}
-        onMouseLeave={() => setIsArpgSideHovered(false)}
-        onClick={() => {
-          setIsArpgSideClicked(true);
-          setIsZPSSideClicked(false);
-          setIsTdSideClicked(false);
-          setVideo('jR6_nmcV2jo');
-          setIsMuted(false);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* ARPG Front Disk */}
-      <canvas 
-        ref={arpgFrontCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isArpgSideClicked ? "35%" : "15%",
-          left: isArpgSideClicked ? "25%" : "63.5%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isArpgSideHovered && !isArpgSideClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* ZPS Side Vinyl */}
-      <canvas 
-        ref={zpsSideVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isZPSSideVinylHovered ? "12.28%" : "14.28%",
-          left: "105%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsZPSSideVinylHovered(true)}
-        onMouseLeave={() => setIsZPSSideVinylHovered(false)}
-        onClick={() => {
-          setIsZPSSideVinylClicked(true);
-          setIsTdSideVinylClicked(false);
-          setIsArpgSideVinylClicked(false);
-          setIsFishSideVinylClicked(false);
-          playRandomMusic(zpsMusic);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* ZPS Front Vinyl */}
-      <canvas 
-        ref={zpsFrontVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isZPSSideVinylClicked ? "22%" : "2%",
-          left: isZPSSideVinylClicked ? "112.75%" : "105%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isZPSSideVinylHovered && !isZPSSideVinylClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* Tower Defense Side Vinyl */}
-      <canvas 
-        ref={tdSideVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isTdSideVinylHovered ? "12.28%" : "14.28%",
-          left: "105.75%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsTdSideVinylHovered(true)}
-        onMouseLeave={() => setIsTdSideVinylHovered(false)}
-        onClick={() => {
-          setIsTdSideVinylClicked(true);
-          setIsZPSSideVinylClicked(false);
-          setIsArpgSideVinylClicked(false);
-          setIsFishSideVinylClicked(false);
-          // No music for Tower Defense yet
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* Tower Defense Front Vinyl */}
-      <canvas 
-        ref={tdFrontVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isTdSideVinylClicked ? "22%" : "2%",
-          left: isTdSideVinylClicked ? "112.75%" : "105.75%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isTdSideVinylHovered && !isTdSideVinylClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* ARPG Side Vinyl */}
-      <canvas 
-        ref={arpgSideVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isArpgSideVinylHovered ? "12.28%" : "14.28%",
-          left: "106.5%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsArpgSideVinylHovered(true)}
-        onMouseLeave={() => setIsArpgSideVinylHovered(false)}
-        onClick={() => {
-          setIsArpgSideVinylClicked(true);
-          setIsZPSSideVinylClicked(false);
-          setIsTdSideVinylClicked(false);
-          setIsFishSideVinylClicked(false);
-          playRandomMusic(arpgMusic);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* ARPG Front Vinyl */}
-      <canvas 
-        ref={arpgFrontVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isArpgSideVinylClicked ? "22%" : "2%",
-          left: isArpgSideVinylClicked ? "112.75%" : "106.5%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isArpgSideVinylHovered && !isArpgSideVinylClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      {/* Fish Side Vinyl */}
-      <canvas 
-        ref={fishSideVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isFishSideVinylHovered ? "12.28%" : "14.28%",
-          left: "107.25%",
-          margin: 0,
-          padding: 0,
-          zIndex: 1,
-          transition: 'top 0.3s ease-in-out',
-          cursor: 'pointer'
-        }}
-        onMouseEnter={() => setIsFishSideVinylHovered(true)}
-        onMouseLeave={() => setIsFishSideVinylHovered(false)}
-        onClick={() => {
-          setIsFishSideVinylClicked(true);
-          setIsZPSSideVinylClicked(false);
-          setIsTdSideVinylClicked(false);
-          setIsArpgSideVinylClicked(false);
-          playRandomMusic(fishMusic);
-          setShowFloatingArrow(false);
-        }}
-      />
-
-      {/* Fish Front Vinyl */}
-      <canvas 
-        ref={fishFrontVinylCanvasRef}
-        className="disk-canvas"
-        style={{
-          position: 'absolute',
-          top: isFishSideVinylClicked ? "22%" : "2%",
-          left: isFishSideVinylClicked ? "112.75%" : "107.25%",
-          transform: 'translateX(-50%)',
-          margin: 0,
-          padding: 0,
-          zIndex: 2,
-          opacity: isFishSideVinylHovered && !isFishSideVinylClicked ? 1 : 0,
-          transition: 'all 0.8s ease-in-out',
-          cursor: 'pointer'
-        }}
-      />
-
-      <img 
-        src={DiskTop} 
-        className="disk-holder"
-        style={{
-          position: 'absolute',
-          top: "31.485%",
-          left: "60.76%",
-          width: `${diskTopWidth * scaleFactor}px`,
-          height: 'auto',
-          margin: 0,
-          padding: 0,
-          zIndex: 999,
-        }}
-        alt="DiskTop"
-      />
       <header className="App-header" style={{ height: `${scaledBackgroundHeight}px` }}>
         <div
           className="gradient"
@@ -1567,80 +1079,536 @@ function App() {
           <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin} className="top-logo" />
         </div>
       </header>
-
-
-      {/* Floating left arrow button */}
-      {showLeftArrow && (
-        <button
-          className="floating-arrow"
-          onClick={() => handleArrowClick(true)}
-          onLoad={() => console.log('Left arrow button rendered, showLeftArrow:', showLeftArrow)}
-          onMouseEnter={() => console.log('Left arrow canvas ref:', leftArrowCanvasRef.current)}
+      
+      {showRotateOverlay && (
+        <div className="rotate-device-overlay">
+          Please rotate your device for the best experience!
+          <br />
+          <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
+          <button 
+            onClick={() => setShowRotateOverlay(false)}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#333',
+              color: '#fff',
+              border: '2px solid #666',
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#555'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#333'}
+          >
+            No thanks
+          </button>
+        </div>
+      )}
+      
+      <div className="zoom-wrapper">
+        <canvas 
+          ref={starfieldRef}
           style={{
             position: 'fixed',
-            top: '50%',
-            left: '24px',
-            zIndex: 2000,
-            background: 'rgba(30, 30, 30, 0)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '48px',
-            height: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
-            cursor: 'pointer',
-            transition: 'background 0.2s',
+            top: 0,
+            left: 0,
+            margin: 0,
+            padding: 0,
+            zIndex: -0.5,
+            transform: `translateY(${scrollY * -0.3}px)`
           }}
-          aria-label="Scroll left"
-        >
-          <canvas 
-            ref={leftArrowCanvasRef}
-            style={{
-              width: '32px',
-              height: '32px',
-              transform: 'rotate(90deg)',
-              backgroundColor: 'rgba(255, 0, 0, 0)' // Temporary red background to see canvas
-            }}
-            onLoad={() => console.log('Left arrow canvas DOM element loaded')}
-          />
-        </button>
-      )}
-      {/* Floating right arrow button */}
-      {true && (
-        <button
-          className="floating-arrow"
-          onClick={() => handleArrowClick(false)}
+        />
+        
+        {/* Floating Characters Canvas */}
+        <canvas 
+          ref={characterCanvasRef}
           style={{
             position: 'fixed',
-            top: '50%',
-            right: '24px',
-            zIndex: 2000,
-            background: 'rgba(30, 30, 30, 0)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '48px',
-            height: '48px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
-            cursor: 'pointer',
-            transition: 'background 0.2s',
+            top: 0,
+            left: 0,
+            margin: 0,
+            padding: 0,
+            zIndex: -0.3,
+            pointerEvents: 'none'
           }}
-          aria-label="Scroll right"
-        >
-          <canvas 
-            ref={rightArrowCanvasRef}
+        />
+        
+        {/* Floating Arrow Canvas */}
+        <canvas 
+          ref={floatingArrowCanvasRef}
+          className="floating-arrow-canvas"
+          style={{
+            position: 'absolute',
+            top: '25%',
+            left: '62%',
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            pointerEvents: 'none',
+            animation: showFloatingArrow ? 'float 2s ease-in-out infinite' : 'none'
+          }}
+        />
+        
+        {/* Right background image, starts at 50% of viewport width */}
+        <img 
+          src={backgroundImageRight}
+          style={{
+            position: 'absolute',
+            top: "5%",
+            left: '45.6vw',
+            width: `${backgroundImageWidth * scaleFactor}px`,
+            height: 'auto',
+            margin: 0,
+            padding: 0,
+            zIndex: -0.2
+          }}
+          alt="Background Right"
+        />
+
+        <img 
+          src={backgroundImage} 
+          style={{
+            position: 'absolute',
+            top: '5%',
+            left: 0,
+            width: `${backgroundImageWidth * scaleFactor}px`,
+            height: 'auto',
+            margin: 0,
+            padding: 0,
+            zIndex: 0
+          }}
+          alt="Background"
+        />
+
+        {/* Custom Shaped YouTube Player */}
+        <div className="crt-effect" style={{
+          position: 'absolute',
+          top: '15.28%',
+          left: '14.635%',
+          width: `${147 * scaleFactor}px`,
+          height: `${124 * scaleFactor}px`,
+          zIndex: -0.1,
+          maskImage: maskUrl,
+          WebkitMaskImage: maskUrl,
+          backgroundColor: 'black'
+        }}>
+          {video && (
+            <iframe
+              src={`https://www.youtube.com/embed/${video}?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=${video}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1`}
+              title="Background Video"
+              style={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '150%',
+                height: '100%',
+                border: 'none'
+              }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
+          <div className="crt-overlay"></div>
+        </div>
+
+        {/* ZPS Side Disk */}
+        <canvas 
+          ref={canvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isZPSSideHovered ? "25.28%" : "27.28%",
+            left: "62%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsZPSSideHovered(true)}
+          onMouseLeave={() => setIsZPSSideHovered(false)}
+          onClick={() => {
+            setIsZPSSideClicked(true);
+            setIsTdSideClicked(false);
+            setIsArpgSideClicked(false);
+            setVideo('eLy7rmBwkqE');
+            setIsMuted(false);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* ZPS Front Disk */}
+        <canvas 
+          ref={zpsFrontCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isZPSSideClicked ? "35%" : "15%",
+            left: isZPSSideClicked ? "25%" : "62%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isZPSSideHovered && !isZPSSideClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* Tower Defense Side Disk */}
+        <canvas 
+          ref={tdSideCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isTdSideHovered ? "25.28%" : "27.28%",
+            left: "62.75%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsTdSideHovered(true)}
+          onMouseLeave={() => setIsTdSideHovered(false)}
+          onClick={() => {
+            setIsTdSideClicked(true);
+            setIsZPSSideClicked(false);
+            setIsArpgSideClicked(false);
+            setVideo('eLy7rmBwkqE');
+            setIsMuted(false);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* Tower Defense Front Disk */}
+        <canvas 
+          ref={tdFrontCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isTdSideClicked ? "35%" : "15%",
+            left: isTdSideClicked ? "25%" : "62.75%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isTdSideHovered && !isTdSideClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* ARPG Side Disk */}
+        <canvas 
+          ref={arpgSideCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isArpgSideHovered ? "25.28%" : "27.28%",
+            left: "63.5%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsArpgSideHovered(true)}
+          onMouseLeave={() => setIsArpgSideHovered(false)}
+          onClick={() => {
+            setIsArpgSideClicked(true);
+            setIsZPSSideClicked(false);
+            setIsTdSideClicked(false);
+            setVideo('jR6_nmcV2jo');
+            setIsMuted(false);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* ARPG Front Disk */}
+        <canvas 
+          ref={arpgFrontCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isArpgSideClicked ? "35%" : "15%",
+            left: isArpgSideClicked ? "25%" : "63.5%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isArpgSideHovered && !isArpgSideClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* ZPS Side Vinyl */}
+        <canvas 
+          ref={zpsSideVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isZPSSideVinylHovered ? "12.28%" : "14.28%",
+            left: "105%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsZPSSideVinylHovered(true)}
+          onMouseLeave={() => setIsZPSSideVinylHovered(false)}
+          onClick={() => {
+            setIsZPSSideVinylClicked(true);
+            setIsTdSideVinylClicked(false);
+            setIsArpgSideVinylClicked(false);
+            setIsFishSideVinylClicked(false);
+            playRandomMusic(zpsMusic);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* ZPS Front Vinyl */}
+        <canvas 
+          ref={zpsFrontVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isZPSSideVinylClicked ? "22%" : "2%",
+            left: isZPSSideVinylClicked ? "112.75%" : "105%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isZPSSideVinylHovered && !isZPSSideVinylClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* Tower Defense Side Vinyl */}
+        <canvas 
+          ref={tdSideVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isTdSideVinylHovered ? "12.28%" : "14.28%",
+            left: "105.75%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsTdSideVinylHovered(true)}
+          onMouseLeave={() => setIsTdSideVinylHovered(false)}
+          onClick={() => {
+            setIsTdSideVinylClicked(true);
+            setIsZPSSideVinylClicked(false);
+            setIsArpgSideVinylClicked(false);
+            setIsFishSideVinylClicked(false);
+            // No music for Tower Defense yet
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* Tower Defense Front Vinyl */}
+        <canvas 
+          ref={tdFrontVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isTdSideVinylClicked ? "22%" : "2%",
+            left: isTdSideVinylClicked ? "112.75%" : "105.75%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isTdSideVinylHovered && !isTdSideVinylClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* ARPG Side Vinyl */}
+        <canvas 
+          ref={arpgSideVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isArpgSideVinylHovered ? "12.28%" : "14.28%",
+            left: "106.5%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsArpgSideVinylHovered(true)}
+          onMouseLeave={() => setIsArpgSideVinylHovered(false)}
+          onClick={() => {
+            setIsArpgSideVinylClicked(true);
+            setIsZPSSideVinylClicked(false);
+            setIsTdSideVinylClicked(false);
+            setIsFishSideVinylClicked(false);
+            playRandomMusic(arpgMusic);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* ARPG Front Vinyl */}
+        <canvas 
+          ref={arpgFrontVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isArpgSideVinylClicked ? "22%" : "2%",
+            left: isArpgSideVinylClicked ? "112.75%" : "106.5%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isArpgSideVinylHovered && !isArpgSideVinylClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        {/* Fish Side Vinyl */}
+        <canvas 
+          ref={fishSideVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isFishSideVinylHovered ? "12.28%" : "14.28%",
+            left: "107.25%",
+            margin: 0,
+            padding: 0,
+            zIndex: 1,
+            transition: 'top 0.3s ease-in-out',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={() => setIsFishSideVinylHovered(true)}
+          onMouseLeave={() => setIsFishSideVinylHovered(false)}
+          onClick={() => {
+            setIsFishSideVinylClicked(true);
+            setIsZPSSideVinylClicked(false);
+            setIsTdSideVinylClicked(false);
+            setIsArpgSideVinylClicked(false);
+            playRandomMusic(fishMusic);
+            setShowFloatingArrow(false);
+          }}
+        />
+
+        {/* Fish Front Vinyl */}
+        <canvas 
+          ref={fishFrontVinylCanvasRef}
+          className="disk-canvas"
+          style={{
+            position: 'absolute',
+            top: isFishSideVinylClicked ? "22%" : "2%",
+            left: isFishSideVinylClicked ? "112.75%" : "107.25%",
+            transform: 'translateX(-50%)',
+            margin: 0,
+            padding: 0,
+            zIndex: 2,
+            opacity: isFishSideVinylHovered && !isFishSideVinylClicked ? 1 : 0,
+            transition: 'all 0.8s ease-in-out',
+            cursor: 'pointer'
+          }}
+        />
+
+        <img 
+          src={DiskTop} 
+          className="disk-holder"
+          style={{
+            position: 'absolute',
+            top: "31.485%",
+            left: "60.76%",
+            width: `${diskTopWidth * scaleFactor}px`,
+            height: 'auto',
+            margin: 0,
+            padding: 0,
+            zIndex: 999,
+          }}
+          alt="DiskTop"
+        />
+
+        {/* Floating left arrow button */}
+        {showLeftArrow && (
+          <button
+            className="floating-arrow"
+            onClick={() => handleArrowClick(true)}
+            onLoad={() => console.log('Left arrow button rendered, showLeftArrow:', showLeftArrow)}
+            onMouseEnter={() => console.log('Left arrow canvas ref:', leftArrowCanvasRef.current)}
             style={{
-              width: '32px',
-              height: '32px',
-              transform: 'rotate(-90deg)'
+              position: 'fixed',
+              top: '50%',
+              left: '24px',
+              zIndex: 2000,
+              background: 'rgba(30, 30, 30, 0)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
             }}
-          />
-        </button>
-      )}
+            aria-label="Scroll left"
+          >
+            <canvas 
+              ref={leftArrowCanvasRef}
+              style={{
+                width: '32px',
+                height: '32px',
+                transform: 'rotate(90deg)',
+                backgroundColor: 'rgba(255, 0, 0, 0)' // Temporary red background to see canvas
+              }}
+              onLoad={() => console.log('Left arrow canvas DOM element loaded')}
+            />
+          </button>
+        )}
+        {/* Floating right arrow button */}
+        {true && (
+          <button
+            className="floating-arrow"
+            onClick={() => handleArrowClick(false)}
+            style={{
+              position: 'fixed',
+              top: '50%',
+              right: '24px',
+              zIndex: 2000,
+              background: 'rgba(30, 30, 30, 0)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '48px',
+              height: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0)',
+              cursor: 'pointer',
+              transition: 'background 0.2s',
+            }}
+            aria-label="Scroll right"
+          >
+            <canvas 
+              ref={rightArrowCanvasRef}
+              style={{
+                width: '32px',
+                height: '32px',
+                transform: 'rotate(-90deg)'
+              }}
+            />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

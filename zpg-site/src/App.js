@@ -69,6 +69,44 @@ import arpgStompAndClaps from "./music/arpg/stomp-and-claps-127551.mp3"
 
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
+import shipGif from "./images/ship.gif";
+import shipFrame1 from "./images/ship_frame1.png";
+import zpGif from "./images/zp.gif";
+import zpFrame1 from "./images/zp_frame1.png";
+
+function GifHoverCanvas({ gifSrc, frameSrc, alt, style }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        ...style,
+        width: style?.width || 200,
+        height: style?.height || 200,
+        pointerEvents: 'auto',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {!hovered && (
+        <img
+          src={frameSrc}
+          alt={alt}
+          style={{ display: 'block', width: '100%', height: '100%' }}
+        />
+      )}
+      {hovered && (
+        <img
+          src={gifSrc}
+          alt={alt}
+          style={{ display: 'block', width: '100%', height: '100%' }}
+        />
+      )}
+    </div>
+  );
+}
 
 function App() {
   const [dimensions, setDimensions] = useState({
@@ -127,13 +165,15 @@ function App() {
   const [appWidth, setAppWidth] = useState(window.innerWidth);
 
   const appRef = useRef(null);
+  const backgroundImageRef = useRef(null);
+  const [overlayTop, setOverlayTop] = useState(null);
 
   // Music arrays
   const zpsMusic = [
     zpsLevel1Song, zpsLevel2Song, zpsLevel3Song, zpsLevel4Song1, zpsLevel4Song2,
     zpsLevel1Var1, zpsLevel1Var3, zpsLevel2Var2, zpsLevel2Var3
   ];
-  
+
   const arpgMusic = [
     arpgTonightGrimes, arpgTonightGives, arpgRatsOnMoon, arpgCasinoIndulgence,
     arpgWoodenRoom, arpgCheeseNew1, arpgCheeseNew2, arpgWashingMachine,
@@ -141,7 +181,7 @@ function App() {
     arpgRatsOnMoonMp3, arpgNerdBuilding, arpgMysteriousTwo, arpgMiceFight1,
     arpgMiceFight2, arpgCheeseMystery, arpgCheeseCave, arpgStompAndClaps
   ];
-  
+
   const fishMusic = [fishingGameSong];
 
   // Function to play random music from a given array
@@ -151,16 +191,16 @@ function App() {
       currentAudio.pause();
       currentAudio.currentTime = 0;
     }
-    
+
     // Select random song
     const randomIndex = Math.floor(Math.random() * musicArray.length);
     const selectedMusic = musicArray[randomIndex];
-    
+
     // Create new audio element
     const audio = new Audio(selectedMusic);
     audio.volume = 0.5; // Set volume to 50%
     audio.loop = true; // Loop the music
-    
+
     // Play the music
     audio.play().then(() => {
       setCurrentAudio(audio);
@@ -199,6 +239,19 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    function updateOverlayTop() {
+      if (backgroundImageRef.current) {
+        const rect = backgroundImageRef.current.getBoundingClientRect();
+        // Get the bottom of the image relative to the viewport
+        setOverlayTop(rect.bottom);
+      }
+    }
+    updateOverlayTop();
+    window.addEventListener('resize', updateOverlayTop);
+    return () => window.removeEventListener('resize', updateOverlayTop);
+  }, [dimensions.scaleFactor]);
 
   // Generate starfield
   useEffect(() => {
@@ -257,7 +310,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const scaleFactor = dimensions.scaleFactor;
-    
+
     // Set canvas size to match viewport
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -266,15 +319,15 @@ function App() {
     const initCharacters = () => {
       const characters = [];
       const numCharacters = 8; // Number of floating characters
-      
+
       console.log('Initializing characters with canvas size:', canvas.width, canvas.height);
-      
+
       for (let i = 0; i < numCharacters; i++) {
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
         const vx = (Math.random() - 0.5) * 2
         const vy = (Math.random() - 0.5) * 2
-        
+
         characters.push({
           x: x,
           y: y,
@@ -285,7 +338,7 @@ function App() {
           loaded: false,
           img: null
         });
-        
+
         console.log(`Character ${i} initialized at (${x.toFixed(2)}, ${y.toFixed(2)}) with velocity (${vx.toFixed(6)}, ${vy.toFixed(6)})`);
       }
       setFloatingCharacters(characters);
@@ -316,7 +369,7 @@ function App() {
     // Animation function
     const animateCharacters = (characters) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       characters.forEach((char, index) => {
         if (!char.loaded || !char.img) {
           return;
@@ -341,12 +394,12 @@ function App() {
         ctx.mozImageSmoothingEnabled = false;
         ctx.webkitImageSmoothingEnabled = false;
         ctx.msImageSmoothingEnabled = false;
-        
+
         // Use actual image dimensions to maintain aspect ratio
         const imgWidth = char.img.width;
         const imgHeight = char.img.height;
         ctx.drawImage(char.img, char.x, char.y, imgWidth, imgHeight);
-        
+
 
       });
 
@@ -371,7 +424,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const arrowSize = 16;
@@ -401,7 +454,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -431,7 +484,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 64;
       const scaleFactor = dimensions.scaleFactor;
@@ -452,7 +505,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = ZPSFront;
   }, [dimensions.scaleFactor, ZPSFront]);
 
@@ -538,11 +591,11 @@ function App() {
   const viewportWidth = dimensions.viewportWidth;
   const backgroundImageWidth = 640; // Assuming this is the original width of backgroundImage
   const backgroundImageHeight = 1080; // Assuming this is the original height of backgroundImage
-  const diskTopWidth = 132; // Assuming this is the original width of DiskTop
+  const diskTopWidth = 133; // Assuming this is the original width of DiskTop
   const diskWidth = 4;
   const scaleFactor = dimensions.scaleFactor;
   const scaledBackgroundHeight = dimensions.scaledBackgroundHeight;
-  
+
   const polygonPoints = '20 0, 80 0, 92 3, 98 8, 100 20, 100 80, 98 92, 92 97, 80 100, 20 100, 8 97, 2 92, 0 80, 0 20, 2 8, 8 3';
   const svgMask = `
     <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -556,7 +609,7 @@ function App() {
   `.trim();
 
   const maskUrl = `url("data:image/svg+xml,${encodeURIComponent(svgMask)}")`;
-  
+
   // Update scrollX, windowWidth, and appWidth on scroll/resize
   useEffect(() => {
     const app = appRef.current;
@@ -611,7 +664,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -632,7 +685,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = tdSide;
   }, [dimensions.scaleFactor, tdSide]);
 
@@ -643,7 +696,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 64;
       const scaleFactor = dimensions.scaleFactor;
@@ -664,7 +717,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = tdFront;
   }, [dimensions.scaleFactor, tdFront]);
 
@@ -675,7 +728,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -696,7 +749,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = arpgSide;
   }, [dimensions.scaleFactor, arpgSide]);
 
@@ -707,7 +760,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 64;
       const scaleFactor = dimensions.scaleFactor;
@@ -728,7 +781,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = arpgFront;
   }, [dimensions.scaleFactor, arpgFront]);
 
@@ -739,7 +792,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -760,7 +813,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = zpsSideVinyl;
   }, [dimensions.scaleFactor, zpsSideVinyl]);
 
@@ -771,7 +824,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
@@ -791,7 +844,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = zpsFrontVinyl;
   }, [dimensions.scaleFactor, zpsFrontVinyl]);
 
@@ -802,7 +855,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -823,7 +876,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = tdSideVinyl;
   }, [dimensions.scaleFactor, tdSideVinyl]);
 
@@ -834,7 +887,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
@@ -854,7 +907,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = tdFrontVinyl;
   }, [dimensions.scaleFactor, tdFrontVinyl]);
 
@@ -865,7 +918,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -886,7 +939,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = arpgSideVinyl;
   }, [dimensions.scaleFactor, arpgSideVinyl]);
 
@@ -897,7 +950,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
@@ -917,7 +970,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = arpgFrontVinyl;
   }, [dimensions.scaleFactor, arpgFrontVinyl]);
 
@@ -928,7 +981,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const diskWidth = 4;
       const scaleFactor = dimensions.scaleFactor;
@@ -949,7 +1002,7 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = fishSideVinyl;
   }, [dimensions.scaleFactor, fishSideVinyl]);
 
@@ -960,7 +1013,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * img.width * 1.3;
@@ -980,14 +1033,14 @@ function App() {
       // Draw the image with pixel-perfect scaling
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
     };
-    
+
     img.src = fishFrontVinyl;
   }, [dimensions.scaleFactor, fishFrontVinyl]);
 
   // Left Arrow Canvas
   useEffect(() => {
     console.log('Left arrow canvas useEffect triggered');
-    
+
     // Use a small timeout to ensure the canvas element exists
     const timer = setTimeout(() => {
       const canvas = leftArrowCanvasRef.current;
@@ -1000,37 +1053,37 @@ function App() {
       console.log('Left arrow canvas useEffect running');
       const ctx = canvas.getContext('2d');
       const img = new Image();
-    
-    img.onload = () => {
-      console.log('Left arrow image loaded successfully:', { imgWidth: img.width, imgHeight: img.height });
-      const scaleFactor = dimensions.scaleFactor;
-      const scaledWidth = scaleFactor * 32;
-      const scaledHeight = scaleFactor * 32;
-      const isPortrait = window.innerHeight > window.innerWidth;
-      const multiplier = isPortrait ? 2 : 1;
-      canvas.width = scaledWidth * multiplier;
-      canvas.height = scaledHeight * multiplier;
-      canvas.style.width = `${scaledWidth}px`;
-      canvas.style.height = `${scaledHeight}px`;
-      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
-      // Disable image smoothing for pixel-perfect rendering
-      ctx.imageSmoothingEnabled = false;
-      ctx.mozImageSmoothingEnabled = false;
-      ctx.webkitImageSmoothingEnabled = false;
-      ctx.msImageSmoothingEnabled = false;
-      // Draw the image with pixel-perfect scaling
-      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
-      console.log('Left arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor, imgWidth: img.width, imgHeight: img.height });
-    };
-    
-    img.onerror = () => {
-      console.error('Failed to load left arrow sprite:', arrowSprite);
-      console.error('Arrow sprite path:', arrowSprite);
-    };
-    
-    img.src = arrowSprite;
+
+      img.onload = () => {
+        console.log('Left arrow image loaded successfully:', { imgWidth: img.width, imgHeight: img.height });
+        const scaleFactor = dimensions.scaleFactor;
+        const scaledWidth = scaleFactor * 32;
+        const scaledHeight = scaleFactor * 32;
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const multiplier = isPortrait ? 2 : 1;
+        canvas.width = scaledWidth * multiplier;
+        canvas.height = scaledHeight * multiplier;
+        canvas.style.width = `${scaledWidth}px`;
+        canvas.style.height = `${scaledHeight}px`;
+        ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
+        // Disable image smoothing for pixel-perfect rendering
+        ctx.imageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.msImageSmoothingEnabled = false;
+        // Draw the image with pixel-perfect scaling
+        ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+        console.log('Left arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor, imgWidth: img.width, imgHeight: img.height });
+      };
+
+      img.onerror = () => {
+        console.error('Failed to load left arrow sprite:', arrowSprite);
+        console.error('Arrow sprite path:', arrowSprite);
+      };
+
+      img.src = arrowSprite;
     }, 100); // 100ms timeout
-    
+
     return () => clearTimeout(timer);
   }, [dimensions.scaleFactor, arrowSprite, showLeftArrow]);
 
@@ -1041,7 +1094,7 @@ function App() {
 
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       const scaleFactor = dimensions.scaleFactor;
       const scaledWidth = scaleFactor * 32;
@@ -1062,17 +1115,27 @@ function App() {
       ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
       console.log('Right arrow canvas rendered:', { scaledWidth, scaledHeight, scaleFactor });
     };
-    
+
     img.onerror = () => {
       console.error('Failed to load right arrow sprite:', arrowSprite);
     };
-    
+
     img.src = arrowSprite;
   }, [dimensions.scaleFactor, arrowSprite]);
 
   console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow, atFarLeft, atFarRight });
   return (
     <div className="App" ref={appRef}>
+      <div className="floating-m5x7-text" style={{ top: "87.5%", left: "5%" }}>
+        We are ZERO POINT GAMES, a creative partnership between Alieno and Michael, and an indie game studio based in Sydney, NSW. We’re a passionate team of talented misfits who get to shine within the dark sky of the vast Internet.<br/><br/>
+        Michael is our brilliant programmer and ambitious musician. He’s spent years cultivating a deep love for video games and the art of writing beautiful code.<br/><br/>
+        Alieno is an Italian-born, newly Aussie artist and writer. His bloated mind has been overflowing with worlds and characters, all ready to burst onto the screen.<br/><br/>
+        Together with Selina, our resourceful graphic designer (who patiently puts up with our ridiculous requests), and supported by our amazing ZPG Community and the soggy settlement of SCUM VULLAGE, we strive to create exciting, imaginative games, powered by little more than a few cups of coffee and an unhealthy amount of garlic bread.<br/><br/>
+        Our mascot, 0P, is a voidborne intergalactic explorer that loves eating clay. He’s here to introduce you to our weird and wonderful creations.
+      </div>
+      {/* GIF hover canvases at 0% 0% */}
+      <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "12.0%", left: "10%" }} />
+      <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "70%" }} />
       <header className="App-header" style={{ height: `${scaledBackgroundHeight}px` }}>
         <div
           className="gradient"
@@ -1092,13 +1155,13 @@ function App() {
             className="header-image"
             alt="Header"
           />
-          <a href="https://www.youtube.com/@Zero_Point_Games" target='_blank' style={{ position:"absolute",left:"25px"}}>
+          <a href="https://www.youtube.com/@Zero_Point_Games" target='_blank' style={{ position: "absolute", left: "25px" }}>
             <input type="image" className="icon" src={youtubeIcon} ></input>
           </a>
-          <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position:"absolute",left:"75px"}}>
+          <a href="https://discord.gg/cF2vQmkXV6" target='_blank' style={{ position: "absolute", left: "75px" }}>
             <input type="image" className="icon" src={discordIcon} ></input>
           </a>
-          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank'style={{ position:"absolute",left:"125px"}}>
+          <a href="https://store.steampowered.com/search/?developer=Zero%20Point%20Games" target='_blank' style={{ position: "absolute", left: "125px" }}>
             <input className="icon" type="image" src={steamIcon}></input>
           </a>
           <a
@@ -1108,16 +1171,16 @@ function App() {
           >
             <input className="icon" type="image" src={blueskyIcon}></input>
           </a>
-          <img style={{height:"110px", right:"25px", position:"absolute",}} src={iconOfSin} className="top-logo" />
+          <img style={{ height: "110px", right: "25px", position: "absolute", }} src={iconOfSin} className="top-logo" />
         </div>
       </header>
-      
+
       {showRotateOverlay && (
         <div className="rotate-device-overlay">
           Please rotate your device for the best experience!
           <br />
-          <span style={{fontSize: '2em', display: 'block', marginTop: '20px'}}>🔄</span>
-          <button 
+          <span style={{ fontSize: '2em', display: 'block', marginTop: '20px' }}>🔄</span>
+          <button
             onClick={() => setShowRotateOverlay(false)}
             style={{
               marginTop: '20px',
@@ -1137,9 +1200,9 @@ function App() {
           </button>
         </div>
       )}
-      
+
       <div className="zoom-wrapper">
-        <canvas 
+        <canvas
           ref={starfieldRef}
           style={{
             position: 'fixed',
@@ -1151,9 +1214,9 @@ function App() {
             transform: `translateY(${scrollY * -0.3}px)`
           }}
         />
-        
+
         {/* Floating Characters Canvas */}
-        <canvas 
+        <canvas
           ref={characterCanvasRef}
           style={{
             position: 'fixed',
@@ -1165,41 +1228,44 @@ function App() {
             pointerEvents: 'none'
           }}
         />
-        
+
         {/* Floating Arrow Canvas */}
-        <canvas 
-          ref={floatingArrowCanvasRef}
-          className="floating-arrow-canvas"
-          style={{
-            position: 'absolute',
-            top: '25%',
-            left: '62%',
-            margin: 0,
-            padding: 0,
-            zIndex: 1,
-            pointerEvents: 'none',
-            animation: showFloatingArrow ? 'float 2s ease-in-out infinite' : 'none'
-          }}
-        />
-        
+        {showFloatingArrow && (
+          <canvas
+            ref={floatingArrowCanvasRef}
+            className="floating-arrow-canvas"
+            style={{
+              position: 'absolute',
+              top: '25%',
+              left: '62%',
+              margin: 0,
+              padding: 0,
+              zIndex: 1,
+              pointerEvents: 'none',
+              animation: 'float 2s ease-in-out infinite'
+            }}
+          />
+        )}
+
         {/* Right background image, starts at 50% of viewport width */}
-        <img 
+        <img
           src={backgroundImageRight}
           style={{
             position: 'absolute',
             top: "5%",
-            left: '45.6vw',
+            left: '48.7vw',
             width: `${backgroundImageWidth * scaleFactor}px`,
             height: 'auto',
             margin: 0,
             padding: 0,
-            zIndex: -0.2
+            zIndex: -0.1
           }}
           alt="Background Right"
         />
 
-        <img 
-          src={backgroundImage} 
+        <img
+          src={backgroundImage}
+          ref={backgroundImageRef}
           style={{
             position: 'absolute',
             top: '5%',
@@ -1208,15 +1274,26 @@ function App() {
             height: 'auto',
             margin: 0,
             padding: 0,
-            zIndex: 0
+            zIndex: -0.2
           }}
           alt="Background"
         />
+        {/* White overlay below background image, above stars/characters, only at the bottom */}
+        <div style={{
+          position: 'absolute',
+          top: `calc(5% + ${scaledBackgroundHeight}px)`,
+          left: 0,
+          width: `${backgroundImageWidth * scaleFactor}px`,
+          height: '100vh',
+          background: '#fff',
+          zIndex: 2,
+          pointerEvents: 'none',
+        }} />
 
         {/* Custom Shaped YouTube Player */}
         <div className="crt-effect" style={{
           position: 'absolute',
-          top: '15.28%',
+          top: '19.95%',
           left: '14.635%',
           width: `${147 * scaleFactor}px`,
           height: `${124 * scaleFactor}px`,
@@ -1245,12 +1322,12 @@ function App() {
         </div>
 
         {/* ZPS Side Disk */}
-        <canvas 
+        <canvas
           ref={canvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isZPSSideHovered ? "25.28%" : "27.28%",
+            top: isZPSSideHovered ? "27.28%" : "29.28%",
             left: "62%",
             margin: 0,
             padding: 0,
@@ -1271,12 +1348,12 @@ function App() {
         />
 
         {/* ZPS Front Disk */}
-        <canvas 
+        <canvas
           ref={zpsFrontCanvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isZPSSideClicked ? "35%" : "15%",
+            top: isZPSSideClicked ? "37%" : "17%",
             left: isZPSSideClicked ? "25%" : "62%",
             transform: 'translateX(-50%)',
             margin: 0,
@@ -1289,12 +1366,12 @@ function App() {
         />
 
         {/* Tower Defense Side Disk */}
-        <canvas 
+        <canvas
           ref={tdSideCanvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isTdSideHovered ? "25.28%" : "27.28%",
+            top: isTdSideHovered ? "27.28%" : "29.28%",
             left: "62.75%",
             margin: 0,
             padding: 0,
@@ -1315,12 +1392,12 @@ function App() {
         />
 
         {/* Tower Defense Front Disk */}
-        <canvas 
+        <canvas
           ref={tdFrontCanvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isTdSideClicked ? "35%" : "15%",
+            top: isTdSideClicked ? "37%" : "17%",
             left: isTdSideClicked ? "25%" : "62.75%",
             transform: 'translateX(-50%)',
             margin: 0,
@@ -1333,12 +1410,12 @@ function App() {
         />
 
         {/* ARPG Side Disk */}
-        <canvas 
+        <canvas
           ref={arpgSideCanvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isArpgSideHovered ? "25.28%" : "27.28%",
+            top: isArpgSideHovered ? "27.28%" : "29.28%",
             left: "63.5%",
             margin: 0,
             padding: 0,
@@ -1359,12 +1436,12 @@ function App() {
         />
 
         {/* ARPG Front Disk */}
-        <canvas 
+        <canvas
           ref={arpgFrontCanvasRef}
           className="disk-canvas"
           style={{
             position: 'absolute',
-            top: isArpgSideClicked ? "35%" : "15%",
+            top: isArpgSideClicked ? "37%" : "17%",
             left: isArpgSideClicked ? "25%" : "63.5%",
             transform: 'translateX(-50%)',
             margin: 0,
@@ -1377,7 +1454,7 @@ function App() {
         />
 
         {/* ZPS Side Vinyl */}
-        <canvas 
+        <canvas
           ref={zpsSideVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1403,7 +1480,7 @@ function App() {
         />
 
         {/* ZPS Front Vinyl */}
-        <canvas 
+        <canvas
           ref={zpsFrontVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1421,7 +1498,7 @@ function App() {
         />
 
         {/* Tower Defense Side Vinyl */}
-        <canvas 
+        <canvas
           ref={tdSideVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1447,7 +1524,7 @@ function App() {
         />
 
         {/* Tower Defense Front Vinyl */}
-        <canvas 
+        <canvas
           ref={tdFrontVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1465,7 +1542,7 @@ function App() {
         />
 
         {/* ARPG Side Vinyl */}
-        <canvas 
+        <canvas
           ref={arpgSideVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1491,7 +1568,7 @@ function App() {
         />
 
         {/* ARPG Front Vinyl */}
-        <canvas 
+        <canvas
           ref={arpgFrontVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1509,7 +1586,7 @@ function App() {
         />
 
         {/* Fish Side Vinyl */}
-        <canvas 
+        <canvas
           ref={fishSideVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1535,7 +1612,7 @@ function App() {
         />
 
         {/* Fish Front Vinyl */}
-        <canvas 
+        <canvas
           ref={fishFrontVinylCanvasRef}
           className="disk-canvas"
           style={{
@@ -1552,13 +1629,13 @@ function App() {
           }}
         />
 
-        <img 
-          src={DiskTop} 
+        <img
+          src={DiskTop}
           className="disk-holder"
           style={{
             position: 'absolute',
-            top: "31.485%",
-            left: "60.76%",
+            top: "34.645%",
+            left: "60.69%",
             width: `${diskTopWidth * scaleFactor}px`,
             height: 'auto',
             margin: 0,
@@ -1594,7 +1671,7 @@ function App() {
             }}
             aria-label="Scroll left"
           >
-            <canvas 
+            <canvas
               ref={leftArrowCanvasRef}
               style={{
                 width: '32px',
@@ -1630,7 +1707,7 @@ function App() {
             }}
             aria-label="Scroll right"
           >
-            <canvas 
+            <canvas
               ref={rightArrowCanvasRef}
               style={{
                 width: '32px',

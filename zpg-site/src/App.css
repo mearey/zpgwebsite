@@ -250,14 +250,14 @@ html, body {
   text-shadow: 2px 2px 0 #929292, 0 0 4px #696969;
   pointer-events: none;
   width: 80vw;
-  max-width: 1200px;
   line-height: 1.4;
   text-align: left;
+  align-items: top;
 }
 
 @media (max-width: 700px), (orientation: portrait) {
   .floating-m5x7-text {
-    top: 292vh !important;
+    max-width: 35vh;
   }
 }
 

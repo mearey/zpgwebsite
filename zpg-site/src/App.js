@@ -1126,13 +1126,6 @@ function App() {
   console.log({ scrollX, maxScroll, showLeftArrow, showRightArrow, atFarLeft, atFarRight });
   return (
     <div className="App" ref={appRef}>
-      <div className="floating-m5x7-text" style={{ top: "87.5%", left: "5%" }}>
-        We are ZERO POINT GAMES, a creative partnership between Alieno and Michael, and an indie game studio based in Sydney, NSW. We’re a passionate team of talented misfits who get to shine within the dark sky of the vast Internet.<br/><br/>
-        Michael is our brilliant programmer and ambitious musician. He’s spent years cultivating a deep love for video games and the art of writing beautiful code.<br/><br/>
-        Alieno is an Italian-born, newly Aussie artist and writer. His bloated mind has been overflowing with worlds and characters, all ready to burst onto the screen.<br/><br/>
-        Together with Selina, our resourceful graphic designer (who patiently puts up with our ridiculous requests), and supported by our amazing ZPG Community and the soggy settlement of SCUM VULLAGE, we strive to create exciting, imaginative games, powered by little more than a few cups of coffee and an unhealthy amount of garlic bread.<br/><br/>
-        Our mascot, 0P, is a voidborne intergalactic explorer that loves eating clay. He’s here to introduce you to our weird and wonderful creations.
-      </div>
       {/* GIF hover canvases at 0% 0% */}
       <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "12.0%", left: "10%" }} />
       <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "70%" }} />
@@ -1214,7 +1207,13 @@ function App() {
             transform: `translateY(${scrollY * -0.3}px)`
           }}
         />
-
+        <div className="floating-m5x7-text" style={{ top: "87.5%", left: "5%" }}>
+        We are ZERO POINT GAMES, a creative partnership between Alieno and Michael, and an indie game studio based in Sydney, NSW. We’re a passionate team of talented misfits who get to shine within the dark sky of the vast Internet.<br/><br/>
+        Michael is our brilliant programmer and ambitious musician. He’s spent years cultivating a deep love for video games and the art of writing beautiful code.<br/><br/>
+        Alieno is an Italian-born, newly Aussie artist and writer. His bloated mind has been overflowing with worlds and characters, all ready to burst onto the screen.<br/><br/>
+        Together with Selina, our resourceful graphic designer (who patiently puts up with our ridiculous requests), and supported by our amazing ZPG Community and the soggy settlement of SCUM VULLAGE, we strive to create exciting, imaginative games, powered by little more than a few cups of coffee and an unhealthy amount of garlic bread.<br/><br/>
+        Our mascot, 0P, is a voidborne intergalactic explorer that loves eating clay. He’s here to introduce you to our weird and wonderful creations.
+      </div>
         {/* Floating Characters Canvas */}
         <canvas
           ref={characterCanvasRef}

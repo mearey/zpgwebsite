@@ -1283,7 +1283,7 @@ function App() {
           top: `calc(5% + ${scaledBackgroundHeight}px)`,
           left: 0,
           width: `${backgroundImageWidth * scaleFactor}px`,
-          height: '100vh',
+          height: '200vh',
           background: '#fff',
           zIndex: 2,
           pointerEvents: 'none',

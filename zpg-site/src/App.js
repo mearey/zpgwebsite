@@ -73,6 +73,12 @@ import shipGif from "./images/ship.gif";
 import shipFrame1 from "./images/ship_frame1.png";
 import zpGif from "./images/zp.gif";
 import zpFrame1 from "./images/zp_frame1.png";
+import boatframe1 from "./images/boatframe1.png"
+import blobframe1 from "./images/blobframe1.png"
+import winkframe1 from "./images/winkframe1.png"
+import boatGif from "./images/boat.gif"
+import blobGif from "./images/blob.gif"
+import winkGif from "./images/wink.gif"
 
 function GifHoverCanvas({ gifSrc, frameSrc, alt, style }) {
   const [hovered, setHovered] = useState(false);
@@ -1128,7 +1134,11 @@ function App() {
     <div className="App" ref={appRef}>
       {/* GIF hover canvases at 0% 0% */}
       <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "12.0%", left: "10%" }} />
-      <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "70%" }} />
+      <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "50%" }} />
+      <GifHoverCanvas gifSrc={boatGif} frameSrc={boatframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "65%" }} />
+      <GifHoverCanvas gifSrc={blobGif} frameSrc={blobframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "74%" }} />
+      <GifHoverCanvas gifSrc={winkGif} frameSrc={winkframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "85%" }} />
+
       <header className="App-header" style={{ height: `${scaledBackgroundHeight}px` }}>
         <div
           className="gradient"

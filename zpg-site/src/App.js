@@ -464,7 +464,7 @@ function App() {
               textAlign: 'center',
               margin: '0 0 15px 0',
               fontFamily: 'm5x7, monospace',
-              fontSize: '18px',
+              fontSize: '40px',
               textShadow: '0 0 10px rgba(0, 150, 255, 0.8)'
             }}
           >
@@ -476,7 +476,7 @@ function App() {
               textAlign: 'left',
               margin: 0,
               fontFamily: 'm5x7, monospace',
-              fontSize: dimensions.viewportWidth > 768 ? '20px' : '18px',
+              fontSize: dimensions.viewportWidth > 768 ? '25px' : '22px',
               lineHeight: '1.4',
               textShadow: '0 0 5px rgba(0, 150, 255, 0.6)'
             }}
@@ -678,7 +678,7 @@ function App() {
                 textAlign: 'center',
                 margin: '0 0 10px 0',
                 fontFamily: 'm5x7, monospace',
-                fontSize: '30px',
+                fontSize: '40px',
                 textShadow: '0 0 10px rgba(0, 150, 255, 0.8)'
               }}
             >
@@ -690,7 +690,7 @@ function App() {
                 textAlign: 'center',
             margin: 0,
                 fontFamily: 'm5x7, monospace',
-                fontSize: dimensions.viewportWidth > 768 ? '20px' : '18px',
+                fontSize: dimensions.viewportWidth > 768 ? '25px' : '22px',
                 lineHeight: '1.4',
                 textShadow: '0 0 5px rgba(0, 150, 255, 0.6)'
               }}

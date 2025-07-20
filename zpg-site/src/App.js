@@ -297,11 +297,11 @@ function App() {
   return (
     <div className="App" ref={appRef}>
       {/* GIF hover canvases */}
-      <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "12.0%", left: "10%" }} />
-      <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "50%" }} />
-      <GifHoverCanvas gifSrc={boatGif} frameSrc={boatframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "65%" }} />
-      <GifHoverCanvas gifSrc={blobGif} frameSrc={blobframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "74%" }} />
-      <GifHoverCanvas gifSrc={winkGif} frameSrc={winkframe1} alt="ZP" style={{ zIndex: 10, width: 50 * scaleFactor, height: 50 * scaleFactor, top: "11%", left: "85%" }} />
+      <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, height: 50 * scaleFactor, top: "12.0%", left: "10%", scaleFactor: scaleFactor }} />
+      <GifHoverCanvas gifSrc={zpGif} frameSrc={zpFrame1} alt="ZP" style={{ zIndex: 10, height: 50 * scaleFactor, top: "11%", left: "50%", scaleFactor: scaleFactor }} />
+      <GifHoverCanvas gifSrc={boatGif} frameSrc={boatframe1} alt="ZP" style={{ zIndex: 10, height: 50 * scaleFactor, top: "11%", left: "65%", scaleFactor: scaleFactor }} />
+      <GifHoverCanvas gifSrc={blobGif} frameSrc={blobframe1} alt="ZP" style={{ zIndex: 10, height: 50 * scaleFactor, top: "11%", left: "74%", scaleFactor: scaleFactor }} />
+      <GifHoverCanvas gifSrc={winkGif} frameSrc={winkframe1} alt="ZP" style={{ zIndex: 10, height: 50 * scaleFactor, top: "11%", left: "85%", scaleFactor: scaleFactor }} />
 
       <Header scaledBackgroundHeight={scaledBackgroundHeight} />
 

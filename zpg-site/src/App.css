@@ -247,7 +247,6 @@ html, body {
   font-family: 'm5x7', monospace;
   color: #000;
   font-size: 1.3em;
-  text-shadow: 2px 2px 0 #929292, 0 0 4px #696969;
   pointer-events: none;
   width: 80vw;
   line-height: 1.4;

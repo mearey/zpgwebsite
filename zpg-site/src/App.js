@@ -445,9 +445,9 @@ function App() {
           style={{
             position: 'absolute',
             top: '87.5%',
-            left: '5%',
-            right: '5%',
-            transform: `translateX(${scrollX}px)`,
+            left: (isMobile && window.innerHeight > window.innerWidth) ? '5%' : '5%',
+            right: (isMobile && window.innerHeight > window.innerWidth) ? '54%' : '5%',
+            transform: `translateX(${(isMobile && window.innerHeight > window.innerWidth) ? scrollX * 0.5 : scrollX}px)`,
             background: 'rgba(0, 100, 255, 0.1)',
             border: '2px solid rgba(0, 150, 255, 0.8)',
             borderRadius: '10px',

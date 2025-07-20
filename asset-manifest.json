@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.f84d9a81.css",
-    "main.js": "/static/js/main.aba1d019.js",
+    "main.css": "/static/css/main.8453329a.css",
+    "main.js": "/static/js/main.a23b2024.js",
     "static/js/453.59eee627.chunk.js": "/static/js/453.59eee627.chunk.js",
     "static/media/level1sonvar3.wav": "/static/media/level1sonvar3.2fd6d69908386f9caa38.wav",
     "static/media/level2Songvar2.wav": "/static/media/level2Songvar2.8347868cb7218a90852a.wav",
@@ -33,16 +33,16 @@
     "static/media/Smelly Ambient....mp3": "/static/media/Smelly Ambient....07f71020628a529ba578.mp3",
     "static/media/Sciencemachinebroke.mp3": "/static/media/Sciencemachinebroke.902adb7c1b380284a2d3.mp3",
     "static/media/Mice Fight.mp3": "/static/media/Mice Fight.8de4ab0c426c1e4c3bfa.mp3",
-    "static/media/website_background.png": "/static/media/website_background.34610185738787227bb2.png",
-    "static/media/website_background_right_scaled.png": "/static/media/website_background_right_scaled.3051d705491a7c164c14.png",
+    "static/media/website_background_right_scaled.png": "/static/media/website_background_right_scaled.5d9446108ab7de1b95dd.png",
+    "static/media/website_background.png": "/static/media/website_background.7b924de8c280cb829fc3.png",
     "static/media/m5x7.ttf": "/static/media/m5x7.0e6f2f9a3759246baef2.ttf",
     "index.html": "/index.html",
-    "main.f84d9a81.css.map": "/static/css/main.f84d9a81.css.map",
-    "main.aba1d019.js.map": "/static/js/main.aba1d019.js.map",
+    "main.8453329a.css.map": "/static/css/main.8453329a.css.map",
+    "main.a23b2024.js.map": "/static/js/main.a23b2024.js.map",
     "453.59eee627.chunk.js.map": "/static/js/453.59eee627.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f84d9a81.css",
-    "static/js/main.aba1d019.js"
+    "static/css/main.8453329a.css",
+    "static/js/main.a23b2024.js"
   ]
 }

@@ -198,6 +198,37 @@ html, body {
   }
 }
 
+@keyframes hologramGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+    border-color: rgba(0, 150, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(0, 150, 255, 0.8);
+    border-color: rgba(0, 200, 255, 1);
+  }
+}
+
+/* Custom scrollbar for hologram */
+.hologram-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.hologram-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 100, 255, 0.1);
+  border-radius: 4px;
+}
+
+.hologram-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 150, 255, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 200, 255, 0.3);
+}
+
+.hologram-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 200, 255, 0.8);
+}
+
 .floating-arrow-canvas {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;

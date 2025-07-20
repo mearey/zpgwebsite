@@ -3,7 +3,7 @@ import {
   ZPSSide, ZPSFront, tdSide, tdFront, arpgSide, arpgFront,
   zpsSideVinyl, zpsFrontVinyl, tdSideVinyl, tdFrontVinyl, 
   arpgSideVinyl, arpgFrontVinyl, fishSideVinyl, fishFrontVinyl,
-  DiskTop
+  DiskTop, wwSide, wwFront
 } from '../constants/images';
 
 function GameDisks({
@@ -11,11 +11,12 @@ function GameDisks({
   isZPSSideHovered, setIsZPSSideHovered, isZPSSideClicked, setIsZPSSideClicked,
   isTdSideHovered, setIsTdSideHovered, isTdSideClicked, setIsTdSideClicked,
   isArpgSideHovered, setIsArpgSideHovered, isArpgSideClicked, setIsArpgSideClicked,
+  isWwSideHovered, setIsWwSideHovered, isWwSideClicked, setIsWwSideClicked,
   isZPSSideVinylHovered, setIsZPSSideVinylHovered, isZPSSideVinylClicked, setIsZPSSideVinylClicked,
   isTdSideVinylHovered, setIsTdSideVinylHovered, isTdSideVinylClicked, setIsTdSideVinylClicked,
   isArpgSideVinylHovered, setIsArpgSideVinylHovered, isArpgSideVinylClicked, setIsArpgSideVinylClicked,
   isFishSideVinylHovered, setIsFishSideVinylHovered, isFishSideVinylClicked, setIsFishSideVinylClicked,
-  setVideo, setIsMuted, setShowFloatingArrow, playRandomMusic, zpsMusic, arpgMusic, fishMusic
+  setVideo, setIsMuted, setShowFloatingArrow, playRandomMusic, zpsMusic, arpgMusic, fishMusic, setSelectedGame, isDiskHovered, setIsDiskHovered
 }) {
   const canvasRef = useRef(null);
   const zpsFrontCanvasRef = useRef(null);
@@ -23,6 +24,8 @@ function GameDisks({
   const tdFrontCanvasRef = useRef(null);
   const arpgSideCanvasRef = useRef(null);
   const arpgFrontCanvasRef = useRef(null);
+  const wwSideCanvasRef = useRef(null);
+  const wwFrontCanvasRef = useRef(null);
   const zpsSideVinylCanvasRef = useRef(null);
   const zpsFrontVinylCanvasRef = useRef(null);
   const tdSideVinylCanvasRef = useRef(null);
@@ -210,6 +213,66 @@ function GameDisks({
 
     img.src = arpgFront;
   }, [dimensions.scaleFactor, arpgFront]);
+
+  // Wanderer's Waters Side Disk Canvas
+  useEffect(() => {
+    const canvas = wwSideCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+
+    img.onload = () => {
+      const diskWidth = 4;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+
+    img.src = wwSide;
+  }, [dimensions.scaleFactor, wwSide]);
+
+  // Wanderer's Waters Front Disk Canvas
+  useEffect(() => {
+    const canvas = wwFrontCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+
+    img.onload = () => {
+      const diskWidth = 64;
+      const scaleFactor = dimensions.scaleFactor;
+      const scaledWidth = scaleFactor * diskWidth * 1.3;
+      const scaledHeight = scaleFactor * img.height * 1.3;
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const multiplier = isPortrait ? 2 : 1;
+      canvas.width = scaledWidth * multiplier;
+      canvas.height = scaledHeight * multiplier;
+      canvas.style.width = `${scaledWidth}px`;
+      canvas.style.height = `${scaledHeight}px`;
+      ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+      ctx.mozImageSmoothingEnabled = false;
+      ctx.webkitImageSmoothingEnabled = false;
+      ctx.msImageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+    };
+
+    img.src = wwFront;
+  }, [dimensions.scaleFactor, wwFront]);
 
   // ZPS Side Vinyl Canvas
   useEffect(() => {
@@ -479,6 +542,16 @@ function GameDisks({
   }, [isArpgSideClicked, setIsArpgSideClicked, setIsArpgSideHovered]);
 
   useEffect(() => {
+    if (isWwSideClicked) {
+      const timer = setTimeout(() => {
+        setIsWwSideClicked(false);
+      }, 800);
+      setIsWwSideHovered(false);
+      return () => clearTimeout(timer);
+    }
+  }, [isWwSideClicked, setIsWwSideClicked, setIsWwSideHovered]);
+
+  useEffect(() => {
     if (isZPSSideVinylClicked) {
       const timer = setTimeout(() => {
         setIsZPSSideVinylClicked(false);
@@ -537,8 +610,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsZPSSideHovered(true)}
-        onMouseLeave={() => setIsZPSSideHovered(false)}
+        onMouseEnter={() => {
+          setIsZPSSideHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsZPSSideHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsZPSSideClicked(true);
           setIsTdSideClicked(false);
@@ -546,6 +625,7 @@ function GameDisks({
           setVideo('eLy7rmBwkqE');
           setIsMuted(false);
           setShowFloatingArrow(false);
+          setSelectedGame('zps');
         }}
       />
 
@@ -581,8 +661,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsTdSideHovered(true)}
-        onMouseLeave={() => setIsTdSideHovered(false)}
+        onMouseEnter={() => {
+          setIsTdSideHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsTdSideHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsTdSideClicked(true);
           setIsZPSSideClicked(false);
@@ -590,6 +676,7 @@ function GameDisks({
           setVideo('eLy7rmBwkqE');
           setIsMuted(false);
           setShowFloatingArrow(false);
+          setSelectedGame('td');
         }}
       />
 
@@ -625,8 +712,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsArpgSideHovered(true)}
-        onMouseLeave={() => setIsArpgSideHovered(false)}
+        onMouseEnter={() => {
+          setIsArpgSideHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsArpgSideHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsArpgSideClicked(true);
           setIsZPSSideClicked(false);
@@ -634,6 +727,7 @@ function GameDisks({
           setVideo('jR6_nmcV2jo');
           setIsMuted(false);
           setShowFloatingArrow(false);
+          setSelectedGame('arpg');
         }}
       />
 
@@ -655,6 +749,58 @@ function GameDisks({
         }}
       />
 
+      {/* Wanderer's Waters Side Disk */}
+      <canvas
+        ref={wwSideCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isWwSideHovered ? "27.28%" : "29.28%",
+          left: "64.25%",
+          margin: 0,
+          padding: 0,
+          zIndex: 1,
+          transition: 'top 0.3s ease-in-out',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={() => {
+          setIsWwSideHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsWwSideHovered(false);
+          setIsDiskHovered(false);
+        }}
+        onClick={() => {
+          setIsWwSideClicked(true);
+          setIsZPSSideClicked(false);
+          setIsTdSideClicked(false);
+          setIsArpgSideClicked(false);
+          setVideo('EWABQE_CYLA');
+          setIsMuted(false);
+          setShowFloatingArrow(false);
+          setSelectedGame('fish');
+        }}
+      />
+
+      {/* Wanderer's Waters Front Disk */}
+      <canvas
+        ref={wwFrontCanvasRef}
+        className="disk-canvas"
+        style={{
+          position: 'absolute',
+          top: isWwSideClicked ? "37%" : "17%",
+          left: isWwSideClicked ? "25%" : "64.25%",
+          transform: 'translateX(-50%)',
+          margin: 0,
+          padding: 0,
+          zIndex: 2,
+          opacity: isWwSideHovered && !isWwSideClicked ? 1 : 0,
+          transition: 'all 0.8s ease-in-out',
+          cursor: 'pointer'
+        }}
+      />
+
       {/* ZPS Side Vinyl */}
       <canvas
         ref={zpsSideVinylCanvasRef}
@@ -669,8 +815,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsZPSSideVinylHovered(true)}
-        onMouseLeave={() => setIsZPSSideVinylHovered(false)}
+        onMouseEnter={() => {
+          setIsZPSSideVinylHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsZPSSideVinylHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsZPSSideVinylClicked(true);
           setIsTdSideVinylClicked(false);
@@ -678,6 +830,7 @@ function GameDisks({
           setIsFishSideVinylClicked(false);
           playRandomMusic(zpsMusic);
           setShowFloatingArrow(false);
+          setSelectedGame('zps');
         }}
       />
 
@@ -713,14 +866,21 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsTdSideVinylHovered(true)}
-        onMouseLeave={() => setIsTdSideVinylHovered(false)}
+        onMouseEnter={() => {
+          setIsTdSideVinylHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsTdSideVinylHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsTdSideVinylClicked(true);
           setIsZPSSideVinylClicked(false);
           setIsArpgSideVinylClicked(false);
           setIsFishSideVinylClicked(false);
           setShowFloatingArrow(false);
+          setSelectedGame('td');
         }}
       />
 
@@ -756,8 +916,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsArpgSideVinylHovered(true)}
-        onMouseLeave={() => setIsArpgSideVinylHovered(false)}
+        onMouseEnter={() => {
+          setIsArpgSideVinylHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsArpgSideVinylHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsArpgSideVinylClicked(true);
           setIsZPSSideVinylClicked(false);
@@ -765,6 +931,7 @@ function GameDisks({
           setIsFishSideVinylClicked(false);
           playRandomMusic(arpgMusic);
           setShowFloatingArrow(false);
+          setSelectedGame('arpg');
         }}
       />
 
@@ -800,8 +967,14 @@ function GameDisks({
           transition: 'top 0.3s ease-in-out',
           cursor: 'pointer'
         }}
-        onMouseEnter={() => setIsFishSideVinylHovered(true)}
-        onMouseLeave={() => setIsFishSideVinylHovered(false)}
+        onMouseEnter={() => {
+          setIsFishSideVinylHovered(true);
+          setIsDiskHovered(true);
+        }}
+        onMouseLeave={() => {
+          setIsFishSideVinylHovered(false);
+          setIsDiskHovered(false);
+        }}
         onClick={() => {
           setIsFishSideVinylClicked(true);
           setIsZPSSideVinylClicked(false);
@@ -809,6 +982,7 @@ function GameDisks({
           setIsArpgSideVinylClicked(false);
           playRandomMusic(fishMusic);
           setShowFloatingArrow(false);
+          setSelectedGame('fish');
         }}
       />
 

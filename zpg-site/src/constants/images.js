@@ -8,6 +8,8 @@ import tdSide from "../images/disks/tdSide.png";
 import tdFront from "../images/disks/tdFront.png";
 import arpgSide from "../images/disks/arpgSide.png";
 import arpgFront from "../images/disks/arpgFront.png";
+import wwSide from "../images/disks/ww_side.png";
+import wwFront from "../images/disks/ww_front.png";
 import zpsSideVinyl from "../images/vinyls/zpsside.png";
 import zpsFrontVinyl from "../images/vinyls/zpsfront.png";
 import tdSideVinyl from "../images/vinyls/idside.png";
@@ -54,6 +56,8 @@ export {
   tdFront,
   arpgSide,
   arpgFront,
+  wwSide,
+  wwFront,
   zpsSideVinyl,
   zpsFrontVinyl,
   tdSideVinyl,

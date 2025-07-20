@@ -19,8 +19,69 @@ import { zpsMusic, arpgMusic, fishMusic } from './constants/music';
 import { 
   backgroundImage, backgroundImageRight, arrowSprite,
   shipGif, shipFrame1, zpGif, zpFrame1, boatframe1, blobframe1, winkframe1,
-  boatGif, blobGif, winkGif, characterSprites
+  boatGif, blobGif, winkGif, characterSprites,
+  ZPSSide, ZPSFront, tdSide, tdFront, arpgSide, arpgFront, wwSide, wwFront
 } from './constants/images';
+
+// Game descriptions
+const gameDescriptions = {
+  zps: {
+    title: "ZERO POINT SURVIVOR",
+    description: `Zero Point Survivor is a space-themed take on the horde-survivor genre. Collect and level up your weapons, strengthening your arsenal with each run through universal upgrades to raise your survival chances. Face an endless barrage of enemies that want to break and destroy you... until you come face to face with the BOSS.
+
+There are 4 unique ships to try, all with their own playstyles and different abilities. Pilot them through 3 different stages and conquer each level’s unique boss.
+
+Follow Pleya Zeno's adventure for survival... with Zero Point.`,
+    url: "https://store.steampowered.com/app/3476600/Zero_Point_Survivor/"
+  },
+  td: {
+    title: "01 TOWER DEFENSE",
+    description: `Strategize around randomly generated levels as you defend the city from the NUMBER invaders in this roguelike tower defense game.
+
+Created entirely by Michael, this game features procedurally generated maps that ensure no two runs are ever the same. Each playthrough offers unique challenges as you build and upgrade your defensive towers to protect against increasingly difficult waves of enemies.
+
+Experience the thrill of adapting your strategy to unpredictable layouts and enemy patterns in this innovative take on the tower defense genre.`,
+    url: "https://gx.games/games/p42gse/01-tower-defense/"
+  },
+  arpg: {
+    title: "A.R.P.G",
+    description: `Soon, you will be able to experience three classic RPGMAKER2003 games in new and improved forms!
+
+The games are:
+
+Norman Jones Selling Extravaganza [Employee Of The Month Edition]
+
+Professor Frippel's Special Invention Show - PEER REVIEWED
+
+Miodesopsia
+
+These games come featuring huge improvements in collaboration with PsychoAlpaca, co-creator of Norman Jones, and Michael, programmer and creator of the Zero Point Games Studio and Zero Point Survivor. Featuring music by Pixeltherapy, Viridian Wright and Michael!
+
+You will see tons of new areas, obstacles, characters and enemies, as well as an incredibly thorough process of polishing and bugfixing. The three games will be packaged into one launcher, with tons of extra stuff!
+
+Also experience the endless runner minigame "Imprisoned For Time", and tons of extras in the featured playable launcher!
+
+-----
+
+NOTE: These are not ARPGs...it's A.R.P.G.!`,
+    url: "https://store.steampowered.com/app/3614300/ARPG_Collection__Sales_Science__Spirits/"
+  },
+  fish: {
+    title: "WANDERER'S WATERS",
+    description: `Welcome to the ultimate indie fishing adventure, crafted with passion by just three dedicated developers! Dive into a vibrant pixel world teeming with unique fish, mysterious creatures, and hidden treasures. Whether you're a casual angler or a master fisherman, there's something for everyone in this experience.
+
+Features:
+
+A Living World: Explore a variety of fishing spots, each with their own rare catches and secrets.
+
+Over 50+ Fish and Creatures: From humble Cod and Salmon to elusive Narwhals and even Alligators, fill your collection and discover them all!
+
+Upgrade Your Gear: Unlock and equip rods, reels, lines, and lures to improve your chances and tackle the toughest catches.
+
+Chill or Challenge: Enjoy relaxing fishing at your own pace, or test your skills with rare and legendary fish.`,
+    url: "https://store.steampowered.com/app/3864110/Wanderers_Waters/"
+  }
+};
 
 function App() {
   // Use custom hooks
@@ -35,6 +96,8 @@ function App() {
   const [isTdSideClicked, setIsTdSideClicked] = useState(false);
   const [isArpgSideHovered, setIsArpgSideHovered] = useState(false);
   const [isArpgSideClicked, setIsArpgSideClicked] = useState(false);
+  const [isWwSideHovered, setIsWwSideHovered] = useState(false);
+  const [isWwSideClicked, setIsWwSideClicked] = useState(false);
   const [isZPSSideVinylHovered, setIsZPSSideVinylHovered] = useState(false);
   const [isZPSSideVinylClicked, setIsZPSSideVinylClicked] = useState(false);
   const [isTdSideVinylHovered, setIsTdSideVinylHovered] = useState(false);
@@ -43,11 +106,42 @@ function App() {
   const [isArpgSideVinylClicked, setIsArpgSideVinylClicked] = useState(false);
   const [isFishSideVinylHovered, setIsFishSideVinylHovered] = useState(false);
   const [isFishSideVinylClicked, setIsFishSideVinylClicked] = useState(false);
-  const [showRotateOverlay, setShowRotateOverlay] = useState(true);
+  const [showRotateOverlay, setShowRotateOverlay] = useState(false);
   const [floatingCharacters, setFloatingCharacters] = useState([]);
   const [showFloatingArrow, setShowFloatingArrow] = useState(true);
   const [video, setVideo] = useState('');
   const [isMuted, setIsMuted] = useState(true);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [isDiskHovered, setIsDiskHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Show rotate overlay only on mobile in portrait mode
+  useEffect(() => {
+    const checkOrientation = () => {
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const shouldShowOverlay = isMobile && isPortrait;
+      setShowRotateOverlay(shouldShowOverlay);
+    };
+    
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, [isMobile]);
 
   // Refs
   const appRef = useRef(null);
@@ -83,11 +177,19 @@ function App() {
       if (!app) return;
       
       const maxScroll = app.scrollWidth - app.clientWidth;
-      const atFarLeft = scrollX <= 0;
-      const atFarRight = scrollX >= maxScroll - 1;
+      const currentScrollX = app.scrollLeft;
       
-      setShowLeftArrow(!atFarLeft);
-      setShowRightArrow(!atFarRight);
+      const newShowLeft = currentScrollX > 0;
+      const newShowRight = currentScrollX < maxScroll - 10;
+      
+      setShowLeftArrow(newShowLeft);
+      setShowRightArrow(newShowRight);
+      
+      // Force another update on next frame to ensure it takes effect
+      requestAnimationFrame(() => {
+        setShowLeftArrow(newShowLeft);
+        setShowRightArrow(newShowRight);
+      });
     };
 
     // Initial calculation
@@ -99,7 +201,7 @@ function App() {
       app.addEventListener('scroll', updateArrowVisibility);
       return () => app.removeEventListener('scroll', updateArrowVisibility);
     }
-  }, [scrollX]);
+  }, []);
 
   // Update overlay top position
   useEffect(() => {
@@ -263,18 +365,33 @@ function App() {
       const arrowSize = 16;
       const scaledWidth = scaleFactor * arrowSize * 1.3;
       const scaledHeight = scaleFactor * arrowSize * 1.3;
+      const textHeight = 20 * scaleFactor; // Extra space for text
+      const textWidth = 80 * scaleFactor; // Extra width for text
+      const totalWidth = Math.max(scaledWidth, textWidth);
+      const totalHeight = scaledHeight + textHeight;
       const isPortrait = window.innerHeight > window.innerWidth;
       const multiplier = isPortrait ? 2 : 1;
-      canvas.width = scaledWidth * multiplier;
-      canvas.height = scaledHeight * multiplier;
-      canvas.style.width = `${scaledWidth}px`;
-      canvas.style.height = `${scaledHeight}px`;
+      canvas.width = totalWidth * multiplier;
+      canvas.height = totalHeight * multiplier;
+      canvas.style.width = `${totalWidth}px`;
+      canvas.style.height = `${totalHeight}px`;
       ctx.setTransform(multiplier, 0, 0, multiplier, 0, 0);
+      // Disable image smoothing for pixel-perfect rendering
       ctx.imageSmoothingEnabled = false;
       ctx.mozImageSmoothingEnabled = false;
       ctx.webkitImageSmoothingEnabled = false;
       ctx.msImageSmoothingEnabled = false;
-      ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
+      
+      // Add text above the arrow
+      ctx.font = `${12 * scaleFactor}px m5x7`;
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Click here!', totalWidth / 2, 5);
+      
+      // Draw the arrow image below the text, centered
+      const arrowX = (totalWidth - scaledWidth) / 2;
+      ctx.drawImage(img, arrowX, textHeight, scaledWidth, scaledHeight);
     };
     img.src = arrowSprite;
   }, [dimensions.scaleFactor, arrowSprite]);
@@ -322,14 +439,55 @@ function App() {
           }}
         />
 
-        {/* About text */}
-        <div className="floating-m5x7-text" style={{ top: "87.5%", left: "5%" }}>
-          We are ZERO POINT GAMES, a creative partnership between Alieno and Michael, and an indie game studio based in Sydney, NSW. We're a passionate team of talented misfits who get to shine within the dark sky of the vast Internet.<br/><br/>
+        {/* About Us Hologram */}
+        <div
+          className="hologram-scrollbar"
+          style={{
+            position: 'absolute',
+            top: '87.5%',
+            left: '5%',
+            right: '5%',
+            transform: `translateX(${scrollX}px)`,
+            background: 'rgba(0, 100, 255, 0.1)',
+            border: '2px solid rgba(0, 150, 255, 0.8)',
+            borderRadius: '10px',
+            padding: '20px',
+            zIndex: 1000,
+            backdropFilter: 'blur(5px)',
+            boxShadow: '0 0 20px rgba(0, 150, 255, 0.5)',
+            animation: 'hologramGlow 2s ease-in-out infinite alternate'
+          }}
+        >
+          <h3
+            style={{
+              color: '#00aaff',
+              textAlign: 'center',
+              margin: '0 0 15px 0',
+              fontFamily: 'm5x7, monospace',
+              fontSize: '18px',
+              textShadow: '0 0 10px rgba(0, 150, 255, 0.8)'
+            }}
+          >
+            ABOUT US
+          </h3>
+          <p
+            style={{
+              color: '#ffffff',
+              textAlign: 'left',
+              margin: 0,
+              fontFamily: 'm5x7, monospace',
+              fontSize: dimensions.viewportWidth > 768 ? '20px' : '18px',
+              lineHeight: '1.4',
+              textShadow: '0 0 5px rgba(0, 150, 255, 0.6)'
+            }}
+          >
+            We are ZERO POINT GAMES, a creative partnership between Alieno and Michael, and an indie game studio based in Sydney, NSW. We're a passionate team of talented misfits who get to shine within the dark sky of the vast Internet.<br/><br/>
           Michael is our brilliant programmer and ambitious musician. He's spent years cultivating a deep love for video games and the art of writing beautiful code.<br/><br/>
-          Alieno is an Italian-born, newly Aussie artist and writer. His bloated mind has been overflowing with worlds and characters, all ready to burst onto the screen.<br/><br/>
-          Together with Selina, our resourceful graphic designer (who patiently puts up with our ridiculous requests), and supported by our amazing ZPG Community and the soggy settlement of SCUM VULLAGE, we strive to create exciting, imaginative games, powered by little more than a few cups of coffee and an unhealthy amount of garlic bread.<br/><br/>
+        Alieno is an Italian-born, newly Aussie artist and writer. His bloated mind has been overflowing with worlds and characters, all ready to burst onto the screen.<br/><br/>
+        Together with Selina, our resourceful graphic designer (who patiently puts up with our ridiculous requests), and supported by our amazing ZPG Community and the soggy settlement of SCUM VULLAGE, we strive to create exciting, imaginative games, powered by little more than a few cups of coffee and an unhealthy amount of garlic bread.<br/><br/>
           Our mascot, 0P, is a voidborne intergalactic explorer that loves eating clay. He's here to introduce you to our weird and wonderful creations.
-        </div>
+          </p>
+      </div>
 
         {/* Floating Characters Canvas */}
         <canvas
@@ -353,7 +511,7 @@ function App() {
             style={{
               position: 'absolute',
               top: '25%',
-              left: '62%',
+              left: '57%',
               margin: 0,
               padding: 0,
               zIndex: 1,
@@ -402,7 +560,7 @@ function App() {
           left: 0,
           width: `${backgroundImageWidth * scaleFactor}px`,
           height: '200vh',
-          background: '#fff',
+          background: '#171924',
           zIndex: 2,
           pointerEvents: 'none',
         }} />
@@ -425,6 +583,10 @@ function App() {
           setIsArpgSideHovered={setIsArpgSideHovered}
           isArpgSideClicked={isArpgSideClicked}
           setIsArpgSideClicked={setIsArpgSideClicked}
+          isWwSideHovered={isWwSideHovered}
+          setIsWwSideHovered={setIsWwSideHovered}
+          isWwSideClicked={isWwSideClicked}
+          setIsWwSideClicked={setIsWwSideClicked}
           isZPSSideVinylHovered={isZPSSideVinylHovered}
           setIsZPSSideVinylHovered={setIsZPSSideVinylHovered}
           isZPSSideVinylClicked={isZPSSideVinylClicked}
@@ -448,10 +610,139 @@ function App() {
           zpsMusic={zpsMusic}
           arpgMusic={arpgMusic}
           fishMusic={fishMusic}
+          setSelectedGame={setSelectedGame}
+          isDiskHovered={isDiskHovered}
+          setIsDiskHovered={setIsDiskHovered}
         />
+
+        {/* Game Description Hologram */}
+        {selectedGame && (isMobile || !isDiskHovered) && (
+          <div
+            className="hologram-scrollbar"
+          style={{
+            position: 'absolute',
+              top: '18.5%',
+              left: '74.5%',
+            transform: 'translateX(-50%)',
+              background: 'rgba(0, 100, 255, 0.1)',
+              border: '2px solid rgba(0, 150, 255, 0.8)',
+              borderRadius: '10px',
+              padding: '20px',
+              width: '40%',
+              maxHeight: '20%',
+              overflowY: 'auto',
+              zIndex: 1000,
+              backdropFilter: 'blur(5px)',
+              boxShadow: '0 0 20px rgba(0, 150, 255, 0.5)',
+              animation: 'hologramGlow 2s ease-in-out infinite alternate'
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedGame(null)}
+          style={{
+            position: 'absolute',
+                top: '10px',
+                right: '10px',
+                background: 'rgba(255, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 0, 0, 0.6)',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                color: '#ff6666',
+                fontSize: '14px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily: 'm5x7, monospace',
+                transition: 'all 0.3s ease',
+                zIndex: 1001
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 0, 0, 0.4)';
+                e.target.style.borderColor = 'rgba(255, 0, 0, 0.8)';
+                e.target.style.color = '#ff8888';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 0, 0, 0.2)';
+                e.target.style.borderColor = 'rgba(255, 0, 0, 0.6)';
+                e.target.style.color = '#ff6666';
+              }}
+            >
+              ×
+            </button>
+            <h3
+          style={{
+                color: '#00aaff',
+                textAlign: 'center',
+                margin: '0 0 10px 0',
+                fontFamily: 'm5x7, monospace',
+                fontSize: '30px',
+                textShadow: '0 0 10px rgba(0, 150, 255, 0.8)'
+              }}
+            >
+              {gameDescriptions[selectedGame].title}
+            </h3>
+            <p
+          style={{
+                color: '#ffffff',
+                textAlign: 'center',
+            margin: 0,
+                fontFamily: 'm5x7, monospace',
+                fontSize: dimensions.viewportWidth > 768 ? '20px' : '18px',
+                lineHeight: '1.4',
+                textShadow: '0 0 5px rgba(0, 150, 255, 0.6)'
+              }}
+            >
+              {gameDescriptions[selectedGame].description.split('\n').map((line, index) => (
+                <span key={index}>
+                  {line}
+                  {index < gameDescriptions[selectedGame].description.split('\n').length - 1 && <br />}
+                </span>
+              ))}
+            </p>
+            <a
+              href={gameDescriptions[selectedGame].url}
+              target="_blank"
+              rel="noopener noreferrer"
+          style={{
+                display: 'block',
+                marginTop: '10px',
+                color: '#00aaff',
+                textDecoration: 'none',
+                fontFamily: 'm5x7, monospace',
+                fontSize: '24px',
+                textAlign: 'center',
+                textShadow: '0 0 5px rgba(0, 150, 255, 0.6)',
+                transition: 'all 0.3s ease',
+              cursor: 'pointer',
+                padding: '5px 10px',
+                borderRadius: '5px',
+                border: '1px solid rgba(0, 150, 255, 0.3)',
+                background: 'rgba(0, 100, 255, 0.1)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#ffffff';
+                e.target.style.textShadow = '0 0 10px rgba(0, 200, 255, 1)';
+                e.target.style.borderColor = 'rgba(0, 200, 255, 0.8)';
+                e.target.style.background = 'rgba(0, 150, 255, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = '#00aaff';
+                e.target.style.textShadow = '0 0 5px rgba(0, 150, 255, 0.6)';
+                e.target.style.borderColor = 'rgba(0, 150, 255, 0.3)';
+                e.target.style.background = 'rgba(0, 100, 255, 0.1)';
+              }}
+            >
+              Check it out!
+            </a>
+          </div>
+        )}
 
         {/* Scroll Arrows */}
         <ScrollArrows
+          key={`${showLeftArrow}-${showRightArrow}`}
           showLeftArrow={showLeftArrow}
           showRightArrow={showRightArrow}
           handleArrowClick={(toLeft) => handleArrowClick(toLeft, appRef)}

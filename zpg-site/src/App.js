@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 // Import components
@@ -9,7 +8,6 @@ import RotateOverlay from './components/RotateOverlay';
 import YouTubePlayer from './components/YouTubePlayer';
 import ScrollArrows from './components/ScrollArrows';
 import GameDisks from './components/GameDisks';
-import PrivacyPolicy from './components/PrivacyPolicy';
 
 // Import hooks
 import { useDimensions } from './hooks/useDimensions';
@@ -413,7 +411,7 @@ function App() {
   const scaleFactor = dimensions.scaleFactor;
   const scaledBackgroundHeight = dimensions.scaledBackgroundHeight;
 
-  const MainContent = () => (
+  return (
     <div className="App" ref={appRef}>
       {/* GIF hover canvases */}
       <GifHoverCanvas gifSrc={shipGif} frameSrc={shipFrame1} alt="Ship" style={{ zIndex: 10, height: 50 * scaleFactor, top: "12.0%", left: "10%", scaleFactor: scaleFactor }} />
@@ -754,15 +752,6 @@ function App() {
         />
       </div>
     </div>
-  );
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<MainContent />} />
-        <Route path="/privacy_policy" element={<PrivacyPolicy />} />
-      </Routes>
-    </Router>
   );
 }
 
